@@ -55,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
         order.setRestaurant(restaurant);
         order.setClient(client);
 
-        // Первое и единственное сохранение
+
         Order savedOrder = orderRepository.save(order);
 
 
