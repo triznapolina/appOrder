@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "itemorder")
+@Table(name = "item_order")
 public class OrderItem {
 
     @Id
