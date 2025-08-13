@@ -52,13 +52,26 @@ public class OrderController {
     }
 
 
+    @Operation(summary = "Изменить заказ", description = "Основной функционал")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Успешный запрос"),
+            @ApiResponse(responseCode = "404",description = "Заказ не найден"),
+
+    })
+    @PatchMapping("/orders/{id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id,
+                                             @RequestBody CreateOrderRequestDTO request) {
+        Order updatedOrder = orderService.updateOrder(id, request);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+
     @Operation(summary = "Получить заказы пользователя", description = "Основной функционал")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Успешный запрос"),
             @ApiResponse(responseCode = "404",description = "Заказы не найдены"),
 
     })
-
     @GetMapping("/my-orders")
     public ResponseEntity<List<Order>> getAllOrdersForCurrentUser() {
         List<Order> orders = orderService.getAllOrdersForCurrentUser();
@@ -119,6 +132,21 @@ public class OrderController {
     }
 
 
+    @Operation(summary = "Поиск заказа по дате", description = "Вспомогательный функционал")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Успешный запрос"),
+            @ApiResponse(responseCode = "404",description = "Заказ не найден"),
+
+    })
+    @GetMapping("/orders/by-date")
+    public ResponseEntity<List<Order>> getAllOrders(@RequestParam String date) {
+        List<Order> orders = orderService.getOrderbyDate(date);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+
+
+
     @Operation(summary = "Фильтрация блюд по диапозону цены", description = "Вспомогательный функционал")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Успешный запрос"),
@@ -159,6 +187,8 @@ public class OrderController {
             @ApiResponse(responseCode = "404",description = "Клиент не найден"),
 
     })
+
+
     @GetMapping("/client-by-name")
     public ResponseEntity<Client> getUserByName(@RequestParam String name) {
         Client client = clientService.getClientByUsername(name);

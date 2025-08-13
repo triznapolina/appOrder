@@ -47,7 +47,8 @@ public class OrderServiceImpl implements OrderService {
         Client client = getCurrentClient();
 
         Restraunt restaurant = restrauntsRepository.findById(request.getRestaurantId()).
-                orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " +
+                        request.getRestaurantId()));
 
         Order order = new Order();
         order.setDate(LocalDate.from(LocalDateTime.now()));
@@ -66,7 +67,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         for (MenuItemRequestDTO itemRequest : request.getMenuItems()) {
             Food food = foodRepository.findById(itemRequest.getFoodId()).
-                    orElseThrow(() -> new RuntimeException("Food not found"));
+                    orElseThrow(() -> new ResourceNotFoundException("Food not found with id: " +
+                            itemRequest.getFoodId()));
 
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(savedOrder);
@@ -81,12 +83,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderItemRepository.saveAll(orderItems);
 
-
-
-
         savedOrder.setPrice(totalPrice);
-
-
 
         return savedOrder;
     }
@@ -103,11 +100,63 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+
+
+    @Override
+    @Transactional
+    public Order updateOrder(Long id, CreateOrderRequestDTO request) {
+        Order orderToUpdate = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+
+        Restraunt restaurant = restrauntsRepository.findById(request.getRestaurantId())
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " +
+                        request.getRestaurantId()));
+
+        orderToUpdate.setRestaurant(restaurant);
+        orderToUpdate.setComment(request.getComment());
+        orderToUpdate.setDate(LocalDate.from(LocalDateTime.now()));
+
+        List<OrderItem> existingOrderItems = orderItemRepository.findByOrder(orderToUpdate);
+        orderItemRepository.deleteAll(existingOrderItems);
+
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (MenuItemRequestDTO itemRequest : request.getMenuItems()) {
+            Food food = foodRepository.findById(itemRequest.getFoodId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Food not found with id: " +
+                            itemRequest.getFoodId()));
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(orderToUpdate);
+            orderItem.setFood(food);
+            orderItem.setQuantity(itemRequest.getQuantity());
+            orderItems.add(orderItem);
+
+            BigDecimal itemPrice = food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+            totalPrice = totalPrice.add(itemPrice);
+        }
+
+        orderItemRepository.saveAll(orderItems);
+        orderToUpdate.setPrice(totalPrice);
+
+        return orderRepository.save(orderToUpdate);
+    }
+
+
+
     @Override
     public Order getOrder(Long id) {
         return  orderRepository.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Order", "id", id));
+                -> new ResourceNotFoundException("Order not found with id: " + id));
     }
+
+
+    @Override
+    public List<Order> getOrderbyDate(String date) {
+        return orderRepository.findOrdersByDate(date);
+    }
+
 
 
     @Override
