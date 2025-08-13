@@ -1,7 +1,7 @@
 package org.example.apporders.services.impl;
 
 import org.example.apporders.exception.ResourceNotFoundException;
-import org.example.apporders.models.Restraunt;
+import org.example.apporders.models.Restaurant;
 import org.example.apporders.repositories.RestrauntsRepository;
 import org.example.apporders.services.RestrauntService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ public class RestaurantServiceImpl implements RestrauntService {
 
 
     @Override
-    public List<Restraunt> getAllRestraunts(){
+    public List<Restaurant> getAllRestraunts(){
         return restrauntsRepository.findAll();
     }
 
     @Override
-    public Restraunt getRestrauntByAddress(String address){
+    public Restaurant getRestrauntByAddress(String address){
 
         if(restrauntsRepository.findByAddress(address)==null){
             throw new ResourceNotFoundException("Restaurant not found with address: " + address);

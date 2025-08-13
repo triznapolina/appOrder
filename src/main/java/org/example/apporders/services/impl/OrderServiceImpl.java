@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
 
         Client client = getCurrentClient();
 
-        Restraunt restaurant = restrauntsRepository.findById(request.getRestaurantId()).
+        Restaurant restaurant = restrauntsRepository.findById(request.getRestaurantId()).
                 orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " +
                         request.getRestaurantId()));
 
@@ -107,7 +107,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderToUpdate = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
 
-        Restraunt restaurant = restrauntsRepository.findById(request.getRestaurantId())
+        Restaurant restaurant = restrauntsRepository.findById(request.getRestaurantId())
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " +
                         request.getRestaurantId()));
 

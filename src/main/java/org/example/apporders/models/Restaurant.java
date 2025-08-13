@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Schema(description = "Ресторан")
-public class Restraunt {
+public class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Restraunt {
 
     private String address;
 
-    public Restraunt(String phone, String address) {
+    public Restaurant(String phone, String address) {
         this.phone = phone;
         this.address = address;
 

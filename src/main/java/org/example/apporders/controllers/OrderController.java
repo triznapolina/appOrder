@@ -110,18 +110,18 @@ public class OrderController {
 
     })
     @GetMapping("/rst-by-address")
-    public ResponseEntity<Restraunt> getRestaurantByAddress(@RequestParam String address) {
-            Restraunt restraunt = restrauntService.getRestrauntByAddress(address);
+    public ResponseEntity<Restaurant> getRestaurantByAddress(@RequestParam String address) {
+            Restaurant restraunt = restrauntService.getRestrauntByAddress(address);
             return new ResponseEntity<>(restraunt, HttpStatus.OK);
     }
 
 
     @Operation(summary = "Отображение всех ресторанов", description = "Вспомогательный функционал")
     @ApiResponse(responseCode = "200",description = "Успешный запрос",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restraunt.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class)))
     @GetMapping("/restraunts/all-rst")
-    public ResponseEntity<List<Restraunt>> getAllRestaurants() {
-        List<Restraunt> restraunts = restrauntService.getAllRestraunts();
+    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+        List<Restaurant> restraunts = restrauntService.getAllRestraunts();
         return new ResponseEntity<>(restraunts, HttpStatus.OK);
     }
 
