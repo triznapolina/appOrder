@@ -61,6 +61,7 @@ git clone
 ```
 
 - Navigate to the project directory: 
+
   Build the project:
 ```
   ./mvnw clean install
@@ -72,7 +73,7 @@ docker-compose up
 ```
 
 ## Api documentation
-Explore and test the API endpoints via Swagger UI at (http://localhost:8080/swagger-ui/index.html#/) after starting the application.
+Explore and test the API endpoints via Swagger UI at http://localhost:8080/swagger-ui/index.html#/ after starting the application.
 
 ## Testing
 Run tests with: 
