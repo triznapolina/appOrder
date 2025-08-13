@@ -9,7 +9,7 @@ This project implements a RESTful API using Spring Boot and represents a restaur
 
 ## API Endpoints
 
-### Registartion
+### Registration
 
 - **POST /app/register:** Create a new client account.
 
