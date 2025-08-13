@@ -67,7 +67,7 @@ git clone https://github.com/triznapolina/appOrder.git
   ./mvnw clean install
 ```
 
-Run with Docker: 
+  Run with Docker: 
 ```
 docker-compose up
 ```
