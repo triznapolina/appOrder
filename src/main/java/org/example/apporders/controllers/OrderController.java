@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.apporders.exception.ResourceNotFoundException;
 import org.example.apporders.models.*;
 import org.example.apporders.models.RequestsDTO.CreateOrderRequestDTO;
 import org.example.apporders.services.ClientService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,12 +44,12 @@ public class OrderController {
     @ApiResponse(responseCode = "200",description = "Успешный запрос",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class)))
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequestDTO request) {
+    public ResponseEntity<Void> createOrder(@RequestBody CreateOrderRequestDTO request) {
         try {
-            Order createdOrder = orderService.createOrder(request);
-            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+            orderService.createOrder(request);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -59,10 +61,10 @@ public class OrderController {
 
     })
     @PatchMapping("/orders/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id,
+    public ResponseEntity<Void> updateOrder(@PathVariable Long id,
                                              @RequestBody CreateOrderRequestDTO request) {
-        Order updatedOrder = orderService.updateOrder(id, request);
-        return ResponseEntity.ok(updatedOrder);
+        orderService.updateOrder(id, request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -90,12 +92,14 @@ public class OrderController {
 
 
     @Operation(summary = "Удалить заказ", description = "Основной функционал")
-    @ApiResponse(responseCode = "200",description = "Успешный запрос",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class)))
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        orderService.deleteOrder(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            orderService.deleteOrder(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 
@@ -139,7 +143,7 @@ public class OrderController {
 
     })
     @GetMapping("/orders/by-date")
-    public ResponseEntity<List<Order>> getAllOrders(@RequestParam String date) {
+    public ResponseEntity<List<Order>> getAllOrders(@RequestParam LocalDate date) {
         List<Order> orders = orderService.getOrderbyDate(date);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
@@ -187,8 +191,6 @@ public class OrderController {
             @ApiResponse(responseCode = "404",description = "Клиент не найден"),
 
     })
-
-
     @GetMapping("/client-by-name")
     public ResponseEntity<Client> getUserByName(@RequestParam String name) {
         Client client = clientService.getClientByUsername(name);

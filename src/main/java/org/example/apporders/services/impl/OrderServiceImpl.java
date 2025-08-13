@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order createOrder(@RequestBody CreateOrderRequestDTO request) {
+    public void createOrder(@RequestBody CreateOrderRequestDTO request) {
 
         Client client = getCurrentClient();
 
@@ -85,7 +85,6 @@ public class OrderServiceImpl implements OrderService {
 
         savedOrder.setPrice(totalPrice);
 
-        return savedOrder;
     }
 
 
@@ -104,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order updateOrder(Long id, CreateOrderRequestDTO request) {
+    public void updateOrder(Long id, CreateOrderRequestDTO request) {
         Order orderToUpdate = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
 
@@ -140,7 +139,8 @@ public class OrderServiceImpl implements OrderService {
         orderItemRepository.saveAll(orderItems);
         orderToUpdate.setPrice(totalPrice);
 
-        return orderRepository.save(orderToUpdate);
+        orderRepository.save(orderToUpdate);
+
     }
 
 
@@ -153,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<Order> getOrderbyDate(String date) {
+    public List<Order> getOrderbyDate(LocalDate date) {
         return orderRepository.findOrdersByDate(date);
     }
 

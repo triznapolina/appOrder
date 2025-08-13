@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Service
-public class RestrauntServiceImpl implements RestrauntService {
+public class RestaurantServiceImpl implements RestrauntService {
 
     @Autowired
     private RestrauntsRepository restrauntsRepository;
@@ -26,7 +26,7 @@ public class RestrauntServiceImpl implements RestrauntService {
     public Restraunt getRestrauntByAddress(String address){
 
         if(restrauntsRepository.findByAddress(address)==null){
-            throw new ResourceNotFoundException("Restraunt", "address", address);
+            throw new ResourceNotFoundException("Restaurant not found with address: " + address);
         }
 
         return restrauntsRepository.findByAddress(address);
