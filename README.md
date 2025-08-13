@@ -57,7 +57,7 @@ This project implements a RESTful API using Spring Boot and represents a restaur
 ## Installation
 - Clone the repository: 
 ```
-git clone
+git clone https://github.com/triznapolina/appOrder.git
 ```
 
 - Navigate to the project directory: 
