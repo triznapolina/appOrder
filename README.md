@@ -62,12 +62,12 @@ git clone https://github.com/triznapolina/appOrder.git
 
 - Navigate to the project directory: 
 
-  Build the project:
+Build the project:
 ```
   ./mvnw clean install
 ```
 
-  Run with Docker: 
+Run with Docker: 
 ```
 docker-compose up
 ```
