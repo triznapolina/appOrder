@@ -129,9 +129,9 @@ public class OrderController {
     @Operation(summary = "Фильтрация еды по категориям", description = "Вспомогательный функционал")
     @ApiResponse(responseCode = "200",description = "Успешный запрос",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Food.class)))
-    @GetMapping("/foods/filter-by-category")
-    public ResponseEntity<List<Food>> getFoodsByCategory(@RequestParam Long categoryId) {
-        List<Food> foods = foodService.findByCategoryId(categoryId);
+    @GetMapping("/foods/filter-by-category/{id}")
+    public ResponseEntity<List<Food>> getFoodsByCategory(@PathVariable Long id) {
+        List<Food> foods = foodService.findByCategoryId(id);
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }
 

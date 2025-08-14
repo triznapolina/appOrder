@@ -74,14 +74,14 @@ public class RepositoryTest {
 
     @Test
     void findRestrauntByAddress() {
-        Restraunt found = restrauntsRepository.findByAddress("Test Address");
+        Restaurant found = restrauntsRepository.findByAddress("Test Address");
         assertNotNull(found, "not null");
     }
 
 
     @Test
     void getRestaurantById() {
-        Restraunt found = restrauntsRepository.getRestaurantById(9L);
+        Restaurant found = restrauntsRepository.getRestaurantById(9L);
         assertNotNull(found, "not null");
     }
 

@@ -19,7 +19,5 @@ public class CreateOrderRequestDTO {
         this.comment = comment;
     }
 
-    public List<MenuItemRequestDTO> getMenuItems() {
-        return menuItems;
-    }
+
 }

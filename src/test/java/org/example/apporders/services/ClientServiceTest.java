@@ -33,5 +33,4 @@ public class ClientServiceTest {
         assertNotNull(foundClient, "not null");
     }
 
-
 }

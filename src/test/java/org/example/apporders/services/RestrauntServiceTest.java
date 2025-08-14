@@ -1,7 +1,7 @@
 package org.example.apporders.services;
 
 import org.example.apporders.exception.ResourceNotFoundException;
-import org.example.apporders.models.Restraunt;
+import org.example.apporders.models.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ public class RestrauntServiceTest {
 
     @Test
     void getAllRestraunts() {
-        List<Restraunt> allRstr = restrauntService.getAllRestraunts();
+        List<Restaurant> allRstr = restrauntService.getAllRestraunts();
         System.out.println(allRstr);
         assertNotNull(allRstr, "not null");
     }
@@ -27,7 +27,7 @@ public class RestrauntServiceTest {
     @Test
     void getRestrauntByAddress() {
 
-        Restraunt foundRestraunt = restrauntService.getRestrauntByAddress("Test Address");
+        Restaurant foundRestraunt = restrauntService.getRestrauntByAddress("Test Address");
         assertEquals("Test Address", foundRestraunt.getAddress());
     }
 
@@ -41,6 +41,7 @@ public class RestrauntServiceTest {
                 "Should start RestrauntNotFoundException "
         );
     }
+
 
 }
 

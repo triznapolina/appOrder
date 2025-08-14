@@ -1,6 +1,7 @@
 package org.example.apporders.security;
 
 
+import org.example.apporders.exception.ResourceNotFoundException;
 import org.example.apporders.models.Client;
 import org.example.apporders.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,16 @@ public class ClientDetailService implements UserDetailsService {
     private ClientRepository clientRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Client user = clientRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String username) throws ResourceNotFoundException {
+        Client client = clientRepository.findByUsername(username);
 
-        if(user == null) {
-            throw new UsernameNotFoundException("User not found");
+        if(client == null) {
+            throw new ResourceNotFoundException("Client not found");
         }
 
         List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("active"));
 
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        return new User(client.getUsername(), client.getPassword(), authorities);
     }
 
 }

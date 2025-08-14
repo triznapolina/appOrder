@@ -45,7 +45,6 @@ public class OrderServiceImpl implements OrderService {
     public void createOrder(@RequestBody CreateOrderRequestDTO request) {
 
         Client client = getCurrentClient();
-
         Restaurant restaurant = restrauntsRepository.findById(request.getRestaurantId()).
                 orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " +
                         request.getRestaurantId()));
@@ -56,13 +55,9 @@ public class OrderServiceImpl implements OrderService {
         order.setRestaurant(restaurant);
         order.setClient(client);
 
-
         Order savedOrder = orderRepository.save(order);
 
-
-
         BigDecimal totalPrice = BigDecimal.ZERO;
-
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (MenuItemRequestDTO itemRequest : request.getMenuItems()) {
@@ -84,20 +79,27 @@ public class OrderServiceImpl implements OrderService {
         orderItemRepository.saveAll(orderItems);
 
         savedOrder.setPrice(totalPrice);
-
     }
 
 
     private Client getCurrentClient() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            String username = ((User) authentication.getPrincipal()).getUsername();
-            Client client = clientRepository.findByUsername(username);
-            return client;
-        } else {
-            throw new IllegalStateException( "User not authenticated or principal is not a UserDetails instance");
+
+        String username = ((User) authentication.getPrincipal()).getUsername();
+
+        Client client = clientRepository.findByUsername(username);
+
+        if(client == null) {
+            throw new ResourceNotFoundException("Client not found with username: " + username);
+
         }
+
+        return client;
+
+
     }
+
+
 
 
 
@@ -173,7 +175,7 @@ public class OrderServiceImpl implements OrderService {
 
         Client client = clientRepository.findByUsername(username);
         if (client == null) {
-            throw new IllegalStateException("Client not found for username: " + username);
+            throw new ResourceNotFoundException("Client not found for username: " + username);
         }
         return orderRepository.findByClientId(client.getId());
     }

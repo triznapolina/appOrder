@@ -41,18 +41,15 @@ public class RegistrationController {
     @PostMapping
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationRequestDTO registerRequest) {
         try {
-            Client newUser = clientService.registerUser(registerRequest);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("username", newUser.getUsername());
-            response.put("phone", newUser.getPhone());
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            clientService.registerUser(registerRequest);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (ValidationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (AlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
+
 
     @Operation(summary = "Получить список всех клиентов", description = "Вспомогательный функционал")
     @ApiResponse(responseCode = "200",description = "Успешный запрос",

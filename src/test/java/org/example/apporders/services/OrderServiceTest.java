@@ -32,9 +32,7 @@ public class OrderServiceTest {
                 "Happy Birthday"
         );
 
-        Order order = orderService.createOrder(request);
-        assertNotNull(order, "not null");
-
+        orderService.createOrder(request);
 
     }
 
@@ -60,7 +58,6 @@ public class OrderServiceTest {
 
 
     }
-
 
 
 }

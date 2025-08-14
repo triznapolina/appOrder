@@ -23,7 +23,6 @@ public class ClientServiceImpl implements ClientService {
     public PasswordEncoder passwordEncoder;
 
 
-
     @Override
     public Client registerUser(@Valid RegistrationRequestDTO request) {
 
