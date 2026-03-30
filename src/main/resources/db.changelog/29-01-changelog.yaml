@@ -1,0 +1,424 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-initial-tables-schema
+      author: polina_tr
+
+      preConditions:
+        - onFail: MARK_RAN
+        - and:
+            - not: { tableExists: { tableName: client } }
+            - not: { tableExists: { tableName: category } }
+            - not: { tableExists: { tableName: restaurant } }
+            - not: { tableExists: { tableName: food } }
+            - not: { tableExists: { tableName: order } }
+            - not: { tableExists: { tableName: order_item } }
+            - not: { tableExists: { tableName: card } }
+            - not: { tableExists: { tableName: payment } }
+            - not: { tableExists: { tableName: delivery } }
+
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_description
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: food
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: short_description
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: food
+            referencedColumnNames: id
+            referencedTableName: category
+            constraintName: fk_category_food
+
+
+        - createTable:
+            tableName: restaurant
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: phone
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: delivery
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: payment_type
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time_delivery
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_inPlace
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar
+                  constraints:
+                    nullable: true
+
+        - createTable:
+            tableName: card
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: holder
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: expiration_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cvc_number
+                  type: int
+                  constraints:
+                    nullable: false
+
+
+        - createTable:
+            tableName: payment
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: identification_number
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: card_id
+            baseTableName: payment
+            referencedColumnNames: id
+            referencedTableName: card
+            constraintName: fk_payment_card
+
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: verification_code
+                  type: varchar
+              - column:
+                  name: phone_number
+                  type: varchar
+                  constraints:
+                    nullable: true
+              - column:
+                  name: full_name
+                  type: varchar
+                  constraints:
+                    nullable: true
+              - column:
+                  name: card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: card_id
+            baseTableName: client
+            referencedColumnNames: id
+            referencedTableName: card
+            constraintName: fk_client_card
+
+        - createTable:
+            tableName: order
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: restaurant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: delivery_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_cancelled
+                  type: boolean
+                  constraints:
+                    nullable: true
+              - column:
+                  name: short_description
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: order
+            referencedColumnNames: id
+            referencedTableName: client
+            constraintName: fk_client_order
+
+        - addForeignKeyConstraint:
+            baseColumnNames: restaurant_id
+            baseTableName: order
+            referencedColumnNames: id
+            referencedTableName: restaurant
+            constraintName: fk_restaurant_order
+
+        - addForeignKeyConstraint:
+            baseColumnNames: payment_id
+            baseTableName: order
+            referencedColumnNames: id
+            referencedTableName: payment
+            constraintName: fk_payment_order
+
+        - addForeignKeyConstraint:
+            baseColumnNames: delivery_id
+            baseTableName: order
+            referencedColumnNames: id
+            referencedTableName: delivery
+            constraintName: fk_delivery_order
+
+
+        - createTable:
+            tableName: order_item
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: food_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: order_item
+            referencedColumnNames: id
+            referencedTableName: order
+            constraintName: fk_order_card
+
+        - addForeignKeyConstraint:
+            baseColumnNames: food_id
+            baseTableName: order_item
+            referencedColumnNames: id
+            referencedTableName: food
+            constraintName: fk_food_card
+
