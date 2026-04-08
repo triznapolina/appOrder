@@ -10,6 +10,7 @@ databaseChangeLog:
             - not: { tableExists: { tableName: category } }
             - not: { tableExists: { tableName: restaurant } }
             - not: { tableExists: { tableName: food } }
+            - not: { tableExists: { tableName: image } }
             - not: { tableExists: { tableName: order } }
             - not: { tableExists: { tableName: order_item } }
             - not: { tableExists: { tableName: card } }
@@ -99,6 +100,49 @@ databaseChangeLog:
             referencedTableName: category
             constraintName: fk_category_food
 
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: original_name
+                  type: varchar
+              - column:
+                  name: content_type
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: size
+                  type: bigint
+              - column:
+                  name: bytes
+                  type: bytea
+                  constraints:
+                    nullable: false
+              - column:
+                  name: food_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseColumnNames: food_id
+            baseTableName: image
+            referencedColumnNames: id
+            referencedTableName: food
+            constraintName: fk_food_image
 
         - createTable:
             tableName: restaurant
@@ -242,6 +286,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
+              - column:
+                  name: status
+                  type: boolean
+                  constraints:
+                    nullable: false
               - column:
                   name: password
                   type: varchar

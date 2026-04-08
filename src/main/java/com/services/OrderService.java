@@ -1,26 +1,34 @@
 package com.services;
 
-import org.example.apporders.entity.RequestsDTO.CreateOrderRequestDTO;
+import com.RequestsDTO.OrderRequest;
+import com.dto.Order;
+import com.dto.OrderInfo;
+import com.inHead.FilterRequest;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderService {
 
-
-    Order getOrder(Long id);
+    OrderInfo getOrder(Long id);
 
     void deleteOrder(Long id);
 
+    OrderInfo createOrder(OrderRequest order);
 
-    void createOrder(CreateOrderRequestDTO request);
+    OrderInfo updateOrder(Long id, OrderRequest request);
 
-    void updateOrder(Long id, CreateOrderRequestDTO request);
+    List<Order> getOrderByCreated(LocalDate date);
 
-    List<Order> getOrderbyDate(LocalDate date);
+    List<Order> getOrderByClientId(Long id);
 
+    void cancelledOrder(Long id, boolean type);
 
-    List<Order> getAllOrdersForCurrentUser();
+    Order updateStatusOrder(Long id, String status);
 
+    OrderInfo updateTotalPriceInOrder(Long id);
 
+    // only admin
+    Page<Order> getAllOrders(FilterRequest filterRequest);
 }

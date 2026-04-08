@@ -1,0 +1,140 @@
+package com.services.impl;
+
+import com.entity.FoodEntity;
+import com.entity.OrderEntity;
+import com.entity.OrderItemEntity;
+import com.RequestsDTO.OrderRequest;
+import com.dto.Order;
+import com.dto.OrderInfo;
+import com.inHead.FilterRequest;
+import com.mapper.OrderMapper;
+import com.repository.OrderItemRepository;
+import com.repository.OrderRepository;
+import com.services.OrderService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final OrderMapper orderMapper;
+
+    @Transactional
+    @Override
+    public OrderInfo createOrder(OrderRequest order) {
+        OrderEntity entity = orderMapper.requestToEntity(order);
+        entity.setStatus("CREATED");
+        entity.setIsCancelled(false);
+
+        OrderEntity savedEntity = orderRepository.save(entity);
+
+        OrderEntity orderEntity = calculateAndSetTotalPrice(savedEntity.getId());
+        List<OrderItemEntity> list = orderItemRepository.findByOrderId(savedEntity.getId());
+
+        return orderMapper.toDtoInfo(orderEntity, list);
+    }
+
+
+    @Transactional
+    @Override
+    public OrderInfo updateOrder(Long id, OrderRequest request) {
+        orderRepository.updateOrder(id, request.getRestaurantId(),
+                request.getDeliveryId(), request.getShortDescription());
+        orderRepository.setStatus(id, "UPDATED");
+
+        OrderEntity orderEntity = calculateAndSetTotalPrice(id);
+        List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
+
+        return orderMapper.toDtoInfo(orderEntity, list);
+    }
+
+
+    @Override
+    public OrderInfo getOrder(Long id) {
+        OrderEntity orderEntity = orderRepository.findById(id).orElse(null);
+        List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
+
+        return orderMapper.toDtoInfo(orderEntity, list);
+    }
+
+    @Transactional
+    @Override
+    public void deleteOrder(Long orderId) {
+
+        List<OrderItemEntity> orderItemsToDelete = orderItemRepository.findByOrderId(orderId);
+        if (!orderItemsToDelete.isEmpty()) {
+            orderItemRepository.deleteAll(orderItemsToDelete);
+        }
+
+        orderRepository.deleteById(orderId);
+    }
+
+    @Override
+    public void cancelledOrder(Long id, boolean type) {
+        orderRepository.cancelled(id, type);
+    }
+
+    @Transactional
+    @Override
+    public Order updateStatusOrder(Long id, String status) {
+
+        orderRepository.setStatus(id, status);
+
+        return orderMapper.toDto(orderRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public OrderInfo updateTotalPriceInOrder(Long orderId) {
+
+        OrderEntity orderEntity = calculateAndSetTotalPrice(orderId);
+        List<OrderItemEntity> list = orderItemRepository.findByOrderId(orderId);
+
+        return orderMapper.toDtoInfo(orderEntity, list);
+    }
+
+    @Override
+    public List<Order> getOrderByCreated(LocalDate date) {
+        return orderRepository.findByDateCreatedAt(date).stream()
+                .map(orderMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<Order> getOrderByClientId(Long id) {
+        return orderRepository.findByClientId(id).stream()
+                .map(orderMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public Page<Order> getAllOrders(FilterRequest request) {
+        return orderRepository.findAll(PageRequest.of(request.getPage(), request.getSize()))
+                .map(orderMapper::toDto);
+    }
+
+
+    OrderEntity calculateAndSetTotalPrice(Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId).orElse(null);
+
+        List<OrderItemEntity> orderItemEntities = orderItemRepository.findByOrderId(orderId);
+
+        BigDecimal totalPrice = orderItemEntities.stream()
+                .map(OrderItemEntity::getPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotalPrice(totalPrice);
+        return orderRepository.save(order);
+    }
+
+
+}

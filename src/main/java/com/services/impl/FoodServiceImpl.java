@@ -1,11 +1,11 @@
 package com.services.impl;
 
 import com.entity.FoodEntity;
-import com.entity.RequestsDTO.UpdaterRequestFood;
-import com.entity.dto.Food;
-import com.entity.inHead.FilterRequest;
+import com.RequestsDTO.UpdaterRequestFood;
+import com.dto.Food;
+import com.inHead.FilterRequest;
 import com.mapper.FoodMapper;
-import com.repositories.FoodRepository;
+import com.repository.FoodRepository;
 import com.services.FoodService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

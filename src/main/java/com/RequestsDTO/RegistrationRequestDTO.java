@@ -1,4 +1,4 @@
-package com.entity.RequestsDTO;
+package com.RequestsDTO;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

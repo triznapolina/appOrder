@@ -1,7 +1,7 @@
 package com.mapper;
 
 import com.entity.FoodEntity;
-import com.entity.dto.Food;
+import com.dto.Food;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

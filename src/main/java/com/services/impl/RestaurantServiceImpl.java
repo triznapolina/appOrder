@@ -1,9 +1,9 @@
 package com.services.impl;
 
-import com.entity.dto.Restaurant;
-import com.entity.inHead.FilterRequest;
+import com.dto.Restaurant;
+import com.inHead.FilterRequest;
 import com.mapper.RestaurantMapper;
-import com.repositories.RestaurantRepository;
+import com.repository.RestaurantRepository;
 import com.services.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

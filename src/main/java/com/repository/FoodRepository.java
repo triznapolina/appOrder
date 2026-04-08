@@ -1,4 +1,4 @@
-package com.repositories;
+package com.repository;
 
 import com.entity.FoodEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,8 +19,7 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
             "WHERE f.id = :foodId")
     void updateFood( @Param("foodId") Long foodId, @Param("name") String name,
             @Param("shortDescription") String shortDescription, @Param("price") BigDecimal price,
-            @Param("categoryId") Long categoryId
-    );
+            @Param("categoryId") Long categoryId);
 
     @Modifying
     @Query("update FoodEntity f set f.isDeleted = :status where f.id = :foodId")
@@ -32,7 +31,7 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
 
     List<FoodEntity> findFoodByName(String foodName);
 
-    @Query("SELECT f FROM FoodEntity f WHERE f.category.id = :categoryId")
+    @Query("SELECT f FROM FoodEntity f WHERE f.categoryEntity.id = :categoryId")
     List<FoodEntity> findByCategoryId(@Param("categoryId") Long categoryId);
 
     @Query("SELECT f FROM FoodEntity f where f.price between :minRange and :maxRange")

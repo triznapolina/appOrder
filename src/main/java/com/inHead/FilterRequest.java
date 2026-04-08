@@ -1,4 +1,4 @@
-package com.entity.inHead;
+package com.inHead;
 
 import lombok.Builder;
 import lombok.Data;

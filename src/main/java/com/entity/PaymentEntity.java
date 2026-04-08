@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import com.entity.inHead.JpaEnable;
+import com.inHead.JpaEnable;
 
 @Getter
 @Setter

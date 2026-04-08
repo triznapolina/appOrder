@@ -1,8 +1,8 @@
 package com.services;
 
-import com.entity.RequestsDTO.UpdaterRequestFood;
-import com.entity.dto.Food;
-import com.entity.inHead.FilterRequest;
+import com.RequestsDTO.UpdaterRequestFood;
+import com.dto.Food;
+import com.inHead.FilterRequest;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public interface FoodService {
 
     Food deactivateStatus(Long id, boolean active);
 
-    Food activateStatus(Long id, boolean active;
+    Food activateStatus(Long id, boolean active);
 
     Food deactivateFood(Long id, boolean active);
 

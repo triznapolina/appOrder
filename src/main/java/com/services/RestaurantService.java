@@ -1,7 +1,7 @@
 package com.services;
 
-import com.entity.dto.Restaurant;
-import com.entity.inHead.FilterRequest;
+import com.dto.Restaurant;
+import com.inHead.FilterRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

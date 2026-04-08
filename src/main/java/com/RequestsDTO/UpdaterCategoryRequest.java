@@ -1,9 +1,9 @@
-package com.entity.dto;
+package com.RequestsDTO;
 
 import lombok.Data;
 
 @Data
-public class Category {
+public class UpdaterCategoryRequest {
 
     private Long id;
 

@@ -1,4 +1,4 @@
-package com.entity.RequestsDTO;
+package com.RequestsDTO;
 
 import lombok.Builder;
 import lombok.Data;

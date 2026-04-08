@@ -1,4 +1,4 @@
-package com.repositories;
+package com.repository;
 
 
 import com.entity.RestaurantEntity;
