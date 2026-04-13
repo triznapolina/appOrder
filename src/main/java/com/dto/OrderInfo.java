@@ -32,4 +32,17 @@ public class OrderInfo {
         private BigDecimal price;
     }
 
+    private Delivery delivery;
+
+    @Data
+    public class Delivery {
+
+        private Long id;
+        private Boolean paymentType;
+        private String timeDelivery;
+        private Boolean isInplace;
+        private String address;
+
+    }
+
 }

@@ -34,6 +34,10 @@ public class ClientEntity extends JpaEnable {
     private String fullName;
 
     @NotNull
+    @Column(name = "status", nullable = false)
+    private Boolean status = false;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "card_id", nullable = false)
     private CardEntity cardEntity;

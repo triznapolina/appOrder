@@ -18,11 +18,10 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByClientId(@Param("clientId") Long clientId);
 
     @Modifying
-    @Query("UPDATE OrderEntity f SET f.restaurantEntity.id = :restaurantId, f.shortDescription = :shortDescription, " +
-            "f.delivery.id = :deliveryId " +
+    @Query("UPDATE OrderEntity f SET f.restaurantEntity.id = :restaurantId, f.shortDescription = :shortDescription " +
             "WHERE f.id = :orderId")
     void updateOrder(@Param("orderId") Long orderId, @Param("restaurantId") Long restaurantId,
-                     @Param("deliveryId") Long deliveryId, @Param("shortDescription") String shortDescription);
+                     @Param("shortDescription") String shortDescription);
 
 
     @Query("SELECT o FROM OrderEntity o WHERE DATE(o.createdAt) = :date")
@@ -36,7 +35,5 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     @Modifying
     @Query("update OrderEntity f set f.isCancelled = :isCancelled where f.id = :orderId")
     void cancelled(Long orderId, boolean isCancelled);
-
-
 
 }

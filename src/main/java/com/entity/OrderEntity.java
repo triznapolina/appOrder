@@ -34,11 +34,6 @@ public class OrderEntity extends JpaEnable {
     private PaymentEntity paymentEntity;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "delivery_id", nullable = false)
-    private DeliveryEntity delivery;
-
-    @NotNull
     @Column(name = "status", nullable = false, length = Integer.MAX_VALUE)
     private String status;
 

@@ -2,11 +2,12 @@ package com.services;
 
 import com.RequestsDTO.ClientRequest;
 import com.dto.Client;
+import com.inHead.FilterRequest;
 import org.springframework.data.domain.Page;
 
 public interface ClientService {
 
-    Client createClient(ClientRequest request);
+    Client createClient(Client request);
 
     Client updateClient(ClientRequest request);
 
@@ -16,7 +17,7 @@ public interface ClientService {
 
     Client activateDeactivate(Long id, boolean active);
 
-    Page<Client> getAllClientsByPage(int pageNo, int pageSize);
+    Page<Client> getAllClientsByPage(FilterRequest request);
 
     Client getClientByEmail(String email);
 }

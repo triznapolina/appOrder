@@ -1,9 +1,9 @@
-package com.dto;
+package com.RequestsDTO;
 
 import lombok.Data;
 
 @Data
-public class Delivery {
+public class DeliveryRequest {
 
     private Long id;
     private Boolean paymentType;

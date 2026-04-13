@@ -1,9 +1,9 @@
 package com.services.impl;
 
+import com.dto.OrderInfo;
 import com.entity.FoodEntity;
 import com.entity.OrderItemEntity;
 import com.RequestsDTO.OrderItemRequest;
-import com.dto.OrderItem;
 import com.mapper.OrderItemMapper;
 import com.repository.FoodRepository;
 import com.repository.OrderItemRepository;
@@ -25,7 +25,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Transactional
     @Override
-    public OrderItem createItem(OrderItemRequest orderItemRequest) {
+    public OrderInfo.OrderItem createItem(OrderItemRequest orderItemRequest) {
         Long orderId = orderItemRequest.getOrderId();
         Long foodId = orderItemRequest.getFoodId();
         Integer quantity = orderItemRequest.getQuantity();
@@ -38,7 +38,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Transactional
     @Override
-    public OrderItem updateItem(OrderItemRequest request) {
+    public OrderInfo.OrderItem updateItem(OrderItemRequest request) {
         FoodEntity foodEntity = foodRepository.findById(request.getFoodId()).orElse(null);
 
         BigDecimal price = BigDecimal.ZERO;
@@ -58,7 +58,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItem findById(Long orderItemId) {
+    public OrderInfo.OrderItem findById(Long orderItemId) {
         return orderItemMapper.toDto(orderItemRepository.findById(orderItemId).orElse(null));
     }
 

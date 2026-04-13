@@ -1,5 +1,6 @@
 package com.mapper;
 
+import com.entity.DeliveryEntity;
 import com.entity.OrderEntity;
 import com.entity.OrderItemEntity;
 import com.RequestsDTO.OrderRequest;
@@ -24,6 +25,6 @@ public interface OrderMapper {
     @Mapping(target = "deliveryId", source = "delivery.id")
     @Mapping(target = "clientId", source = "client.id")
     @Mapping(target = "restaurantId", source = "restaurantEntity.id")
-    OrderInfo toDtoInfo(OrderEntity orderEntity, List<OrderItemEntity> orderItemList);
+    OrderInfo toDtoInfo(OrderEntity orderEntity, List<OrderItemEntity> orderItemList, DeliveryEntity deliveryEntity);
 
 }

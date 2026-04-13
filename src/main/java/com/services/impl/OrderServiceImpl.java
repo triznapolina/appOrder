@@ -1,6 +1,6 @@
 package com.services.impl;
 
-import com.entity.FoodEntity;
+import com.entity.DeliveryEntity;
 import com.entity.OrderEntity;
 import com.entity.OrderItemEntity;
 import com.RequestsDTO.OrderRequest;
@@ -8,6 +8,7 @@ import com.dto.Order;
 import com.dto.OrderInfo;
 import com.inHead.FilterRequest;
 import com.mapper.OrderMapper;
+import com.repository.DeliveryRepository;
 import com.repository.OrderItemRepository;
 import com.repository.OrderRepository;
 import com.services.OrderService;
@@ -27,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final DeliveryRepository deliveryRepository;
     private final OrderMapper orderMapper;
 
     @Transactional
@@ -41,21 +43,24 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity orderEntity = calculateAndSetTotalPrice(savedEntity.getId());
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(savedEntity.getId());
 
-        return orderMapper.toDtoInfo(orderEntity, list);
+        DeliveryEntity delivery = deliveryRepository.findByOrderId(savedEntity.getId());
+
+        return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
 
 
     @Transactional
     @Override
     public OrderInfo updateOrder(Long id, OrderRequest request) {
-        orderRepository.updateOrder(id, request.getRestaurantId(),
-                request.getDeliveryId(), request.getShortDescription());
+        orderRepository.updateOrder(id, request.getRestaurantId(), request.getShortDescription());
         orderRepository.setStatus(id, "UPDATED");
 
         OrderEntity orderEntity = calculateAndSetTotalPrice(id);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
 
-        return orderMapper.toDtoInfo(orderEntity, list);
+        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderEntity.getId());
+
+        return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
 
 
@@ -63,8 +68,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderInfo getOrder(Long id) {
         OrderEntity orderEntity = orderRepository.findById(id).orElse(null);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
+        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderEntity.getId());
 
-        return orderMapper.toDtoInfo(orderEntity, list);
+        return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
 
     @Transactional
@@ -72,8 +78,10 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Long orderId) {
 
         List<OrderItemEntity> orderItemsToDelete = orderItemRepository.findByOrderId(orderId);
-        if (!orderItemsToDelete.isEmpty()) {
+        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderId);
+        if (!orderItemsToDelete.isEmpty() && delivery != null) {
             orderItemRepository.deleteAll(orderItemsToDelete);
+            deliveryRepository.delete(delivery);
         }
 
         orderRepository.deleteById(orderId);
@@ -98,8 +106,9 @@ public class OrderServiceImpl implements OrderService {
 
         OrderEntity orderEntity = calculateAndSetTotalPrice(orderId);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(orderId);
+        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderId);
 
-        return orderMapper.toDtoInfo(orderEntity, list);
+        return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
 
     @Override

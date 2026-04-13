@@ -16,6 +16,11 @@ public class DeliveryEntity {
     private Long id;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    private OrderEntity order;
+
+    @NotNull
     @Column(name = "payment_type", nullable = false)
     private Boolean paymentType = false;
 

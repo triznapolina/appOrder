@@ -1,16 +1,16 @@
 package com.services;
 
 import com.RequestsDTO.OrderItemRequest;
-import com.dto.OrderItem;
+import com.dto.OrderInfo;
 
 public interface OrderItemService {
 
-    OrderItem createItem(OrderItemRequest orderItem);
+    OrderInfo.OrderItem createItem(OrderItemRequest orderItem);
 
-    OrderItem updateItem(OrderItemRequest orderItem);
+    OrderInfo.OrderItem updateItem(OrderItemRequest orderItem);
 
     void deleteItem(Long orderItemId);
 
-    OrderItem findById(Long orderItemId);
+    OrderInfo.OrderItem findById(Long orderItemId);
 
 }

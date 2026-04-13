@@ -178,6 +178,11 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: order_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
                   name: payment_type
                   type: boolean
                   constraints:
@@ -197,6 +202,14 @@ databaseChangeLog:
                   type: varchar
                   constraints:
                     nullable: true
+
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: delivery
+            referencedColumnNames: id
+            referencedTableName: order
+            constraintName: fk_order_delivery
+
 
         - createTable:
             tableName: card
@@ -360,11 +373,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: delivery_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
                   name: status
                   type: varchar
                   constraints:
@@ -417,13 +425,6 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: payment
             constraintName: fk_payment_order
-
-        - addForeignKeyConstraint:
-            baseColumnNames: delivery_id
-            baseTableName: order
-            referencedColumnNames: id
-            referencedTableName: delivery
-            constraintName: fk_delivery_order
 
 
         - createTable:
