@@ -1,14 +1,12 @@
 package com.inHead;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@Builder
+@AllArgsConstructor
 public class FilterRequest {
-
     private int page;
     private int size;
-
 
 }

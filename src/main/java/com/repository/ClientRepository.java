@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface ClientRepository extends JpaRepository<ClientEntity, String> {
+public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
 
     Optional<ClientEntity> findByEmail(String email);
 
@@ -22,4 +22,5 @@ public interface ClientRepository extends JpaRepository<ClientEntity, String> {
     @Modifying
     @Query("update ClientEntity u set u.status = :active where u.id = :userId")
     void setStatusOfActivity(@Param("userId") Long userId, @Param("active") boolean active);
+
 }

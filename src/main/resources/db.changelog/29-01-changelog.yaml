@@ -203,14 +203,6 @@ databaseChangeLog:
                   constraints:
                     nullable: true
 
-        - addForeignKeyConstraint:
-            baseColumnNames: order_id
-            baseTableName: delivery
-            referencedColumnNames: id
-            referencedTableName: order
-            constraintName: fk_order_delivery
-
-
         - createTable:
             tableName: card
             columns:
@@ -303,7 +295,7 @@ databaseChangeLog:
                   name: status
                   type: boolean
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: password
                   type: varchar
@@ -312,6 +304,8 @@ databaseChangeLog:
               - column:
                   name: verification_code
                   type: varchar
+                  constraints:
+                    nullable: true
               - column:
                   name: phone_number
                   type: varchar
@@ -326,7 +320,7 @@ databaseChangeLog:
                   name: card_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: created_at
                   type: timestamp
@@ -426,6 +420,12 @@ databaseChangeLog:
             referencedTableName: payment
             constraintName: fk_payment_order
 
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: delivery
+            referencedColumnNames: id
+            referencedTableName: order
+            constraintName: fk_order_delivery
 
         - createTable:
             tableName: order_item

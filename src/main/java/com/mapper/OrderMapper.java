@@ -21,10 +21,10 @@ public interface OrderMapper {
 
     OrderEntity requestToEntity(OrderRequest orderRequest);
 
-    @Mapping(target = "paymentId", source = "paymentEntity.id")
+    @Mapping(target = "paymentId", source = "orderEntity.paymentEntity.id")
     @Mapping(target = "deliveryId", source = "delivery.id")
-    @Mapping(target = "clientId", source = "client.id")
-    @Mapping(target = "restaurantId", source = "restaurantEntity.id")
-    OrderInfo toDtoInfo(OrderEntity orderEntity, List<OrderItemEntity> orderItemList, DeliveryEntity deliveryEntity);
+    @Mapping(target = "clientId", source = "orderEntity.client.id")
+    @Mapping(target = "restaurantId", source = "orderEntity.restaurantEntity.id")
+    OrderInfo toDtoInfo(OrderEntity orderEntity, List<OrderItemEntity> orderItemList, DeliveryEntity delivery);
 
 }

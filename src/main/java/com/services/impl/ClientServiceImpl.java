@@ -2,6 +2,7 @@ package com.services.impl;
 
 import com.RequestsDTO.ClientRequest;
 import com.dto.Client;
+import com.entity.CardEntity;
 import com.entity.ClientEntity;
 import com.exception.AlreadyExistsException;
 import com.exception.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import com.services.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,18 +24,14 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
 
-    @Transactional
     @Override
-    public Client createClient(Client request) {
+    public void createClient(ClientEntity request) {
 
         if (clientRepository.existsByEmail((request.getEmail()))) {
             throw new AlreadyExistsException("User with email=" + request.getEmail() + " is already exists");
         }
 
-        ClientEntity user = clientMapper.toEntity(request);
-        user.setEmail(request.getEmail());
-        user = clientRepository.save(user);
-        return clientMapper.toDto(user);
+        clientMapper.toDto(clientRepository.save(request));
     }
 
     @Transactional
@@ -42,7 +40,6 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity user = clientRepository.findById(request.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with id="+ request.getId() + " is not found"));
 
-        user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
         user = clientRepository.save(user);
@@ -61,11 +58,7 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     @Override
     public void deleteClientById(Long clientId) {
-
-        ClientEntity user = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id="+ clientId + " is not found"));
-
-        clientRepository.delete(user);
+        clientRepository.deleteById(clientId);
     }
 
     @Transactional
@@ -82,12 +75,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Page<Client> getAllClientsByPage(FilterRequest request) {
-
         return clientRepository.findAll(PageRequest.of(request.getPage(), request.getSize()))
                 .map(clientMapper::toDto);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Client getClientByEmail(String email) {
 
@@ -95,5 +86,16 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with email="+ email + " is not found"));
 
         return clientMapper.toDto(user);
+    }
+
+    @Override
+    public ClientEntity getOne(String email) {
+        return clientRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email="+ email + " is not found"));
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return this::getOne;
     }
 }

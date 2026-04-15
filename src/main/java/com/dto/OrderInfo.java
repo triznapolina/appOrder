@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 public class OrderInfo {
 
-    private Long id;
     private Long clientId;
     private Long restaurantId;
     private Long paymentId;
@@ -24,7 +23,7 @@ public class OrderInfo {
     private List<OrderItem> list;
 
     @Data
-    public class OrderItem {
+    public static class OrderItem {
         private Long id;
         private Long foodId;
         private Long orderId;
@@ -35,7 +34,7 @@ public class OrderInfo {
     private Delivery delivery;
 
     @Data
-    public class Delivery {
+    public static class Delivery {
 
         private Long id;
         private Boolean paymentType;
