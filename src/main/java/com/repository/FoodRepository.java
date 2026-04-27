@@ -22,10 +22,6 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
             @Param("categoryId") Long categoryId);
 
     @Modifying
-    @Query("update FoodEntity f set f.isDeleted = :status where f.id = :foodId")
-    void setIsDeleted(@Param("foodId") Long foodId, boolean status);
-
-    @Modifying
     @Query("update FoodEntity f set f.isActive = :status where f.id = :foodId")
     void setIsActive(@Param("foodId") Long foodId, boolean status);
 

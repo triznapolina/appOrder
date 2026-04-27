@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.RequestsDTO.RegisterRequest;
 import com.dto.UserInfo;
 import com.dto.auth.AuthRequest;
 import com.dto.auth.AuthResponse;
@@ -22,7 +23,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
         authenticationService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

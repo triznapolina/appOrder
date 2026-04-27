@@ -48,20 +48,12 @@ public class FoodServiceImpl implements FoodService {
 
 
     @Override
-    public Food deactivateFood(Long id, boolean active) {
-        foodRepository.setIsDeleted(id, false);
-        return foodMapper.toDto(foodRepository.findById(id).orElse(null));
-    }
-
-
-    @Override
     @Transactional
     public Food updateFood(Long foodId, UpdaterRequestFood food) {
 
         foodRepository.updateFood(foodId, food.getName(), food.getShortDescription(),
                                   food.getPrice(), food.getCategoryTypeId());
 
-        foodRepository.setIsDeleted(foodId, false);
         foodRepository.setIsActive(foodId, true);
 
         FoodEntity foodEntity = foodRepository.findById(foodId).orElse(null);
@@ -101,9 +93,8 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public Page<Food> getAllFoods(FilterRequest request) {
-        return foodRepository.findAll(PageRequest.of(request.getPage(), request.getSize()))
-                .map(foodMapper::toDto);
+    public List<Food> getAllFoods() {
+        return foodRepository.findAll().stream().map(foodMapper::toDto).toList();
     }
 
 

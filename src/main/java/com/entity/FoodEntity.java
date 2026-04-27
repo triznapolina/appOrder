@@ -39,8 +39,4 @@ public class FoodEntity extends JpaEnable {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = false;
 
-    @NotNull
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
-
 }

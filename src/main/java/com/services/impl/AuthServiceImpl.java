@@ -1,5 +1,6 @@
 package com.services.impl;
 
+import com.RequestsDTO.RegisterRequest;
 import com.dto.UserInfo;
 import com.dto.auth.AuthResponse;
 import com.dto.auth.AuthRequest;
@@ -30,9 +31,10 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public void register(AuthRequest request) {
+    public void register(RegisterRequest request) {
 
         ClientEntity clientEntity = new ClientEntity();
+        clientEntity.setFullName(request.getFullName());
         clientEntity.setEmail(request.getEmail());
         clientEntity.setPassword(passwordEncoder.encode(request.getPassword()));
         clientEntity.setRole(ClientEntity.Role.ROLE_USER);
@@ -85,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean isTokenValid(String token) {
-        return jwtService.validateAccessToken(token);
+        return jwtService.validateRefreshToken(token);
     }
 
     @Override

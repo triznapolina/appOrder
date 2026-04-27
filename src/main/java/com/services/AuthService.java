@@ -1,5 +1,6 @@
 package com.services;
 
+import com.RequestsDTO.RegisterRequest;
 import com.dto.UserInfo;
 import com.dto.auth.AuthResponse;
 import com.dto.auth.AuthRequest;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
 
-    void register(AuthRequest request);
+    void register(RegisterRequest request);
 
     AuthResponse login(AuthRequest request);
 

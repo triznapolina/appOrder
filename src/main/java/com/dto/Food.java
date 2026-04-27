@@ -3,6 +3,8 @@ package com.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class Food {
@@ -13,6 +15,6 @@ public class Food {
     private BigDecimal price;
     private String categoryType;
     private Boolean isActive;
-    private Boolean isDeleted;
+    private LocalDate createdAt;
 
 }

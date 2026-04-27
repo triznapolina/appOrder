@@ -18,13 +18,11 @@ public interface FoodService {
 
     List<Food> deleteFood(Long foodId);
 
-    Page<Food> getAllFoods(FilterRequest request);
+    List<Food> getAllFoods();
 
     Food deactivateStatus(Long id, boolean active);
 
     Food activateStatus(Long id, boolean active);
-
-    Food deactivateFood(Long id, boolean active);
 
     List<Food> findByCategoryId(Long categoryId);
 
