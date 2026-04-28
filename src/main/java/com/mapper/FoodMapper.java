@@ -18,7 +18,7 @@ public interface FoodMapper {
 
     FoodEntity toEntity(Food food);
 
-    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "localDateTimeToString")
+    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "localDateTimeToDate")
     Food toDto(FoodEntity foodEntity);
 
     @Named("localDateTimeToDate")

@@ -2,10 +2,15 @@ package com.services.impl;
 
 import com.RequestsDTO.UpdaterCategoryRequest;
 import com.dto.Category;
+import com.dto.CategoryResponse;
+import com.entity.CategoryEntity;
+import com.inHead.FilterRequest;
 import com.mapper.CategoryMapper;
 import com.repository.CategoryRepository;
 import com.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +42,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll().stream()
-                .map(categoryMapper::toDto)
-                .toList();
+    public Page<CategoryEntity> getAllCategories(FilterRequest request) {
+        return categoryRepository.findAll(PageRequest.of(request.getPage(), request.getSize()));
     }
 
     @Override
