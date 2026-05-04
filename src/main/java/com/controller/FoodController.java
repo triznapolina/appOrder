@@ -5,11 +5,19 @@ import com.dto.Food;
 import com.inHead.FilterRequest;
 import com.services.FoodService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -20,9 +28,12 @@ public class FoodController {
    private final FoodService foodService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/foods")
-    public ResponseEntity<Food> createFood(@RequestBody Food food) {
-        return ResponseEntity.ok(foodService.createFood(food));
+    @PostMapping(value = "/foods", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Food createFood(
+            @RequestPart("food") Food food,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        return foodService.createFood(food, image);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -72,6 +83,23 @@ public class FoodController {
     @GetMapping("/foods/price")
     public ResponseEntity<List<Food>> findByPriceBetween(@RequestParam BigDecimal minRange, @RequestParam BigDecimal maxRange) {
         return ResponseEntity.ok(foodService.findByPriceBetween(minRange, maxRange));
+    }
+
+    @GetMapping("/images/{filename}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
+
+        Path path = Paths.get("uploads").resolve(filename);
+        Resource resource = new UrlResource(path.toUri());
+
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(Files.probeContentType(path) != null
+                        ? MediaType.parseMediaType(Files.probeContentType(path))
+                        : MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
 }

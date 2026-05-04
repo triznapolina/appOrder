@@ -35,6 +35,9 @@ public class FoodEntity extends JpaEnable {
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity categoryEntity;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @NotNull
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = false;

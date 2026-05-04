@@ -16,6 +16,7 @@ import java.util.Date;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface FoodMapper {
 
+    @Mapping(target = "categoryEntity.id", source = "categoryId")
     FoodEntity toEntity(Food food);
 
     @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "localDateTimeToDate")

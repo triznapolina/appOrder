@@ -12,9 +12,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +31,52 @@ public class FoodServiceImpl implements FoodService {
 
 
     @Override
-    public Food createFood(Food food) {
-        return foodMapper.toDto(foodRepository.save(foodMapper.toEntity(food)));
+    public Food createFood(Food food, MultipartFile image) {
+
+        String fileName = null;
+
+        String original = image.getOriginalFilename();
+
+        String extension = original != null && original.contains(".")
+                ? original.substring(original.lastIndexOf("."))
+                : ".jpg";
+
+
+        if (image != null && !image.isEmpty()) {
+            try {
+                fileName = UUID.randomUUID() + extension;
+
+                Path path = Paths.get(System.getProperty("user.dir"), "uploads", fileName);
+                Files.createDirectories(path.getParent());
+                Files.write(path, image.getBytes());
+
+            } catch (IOException e) {
+                throw new RuntimeException("Ошибка сохранения файла", e);
+            }
+        }
+
+        FoodEntity entity = foodMapper.toEntity(food);
+        entity.setImagePath(fileName);
+
+        return foodMapper.toDto(foodRepository.save(entity));
+
+
     }
 
     @Override
     public Food getById(Long id) {
-        return foodMapper.toDto(foodRepository.findById(id).orElse(null));
+
+        FoodEntity entity = foodRepository.findById(id).orElse(null);
+
+        if (entity == null) return null;
+
+        Food dto = foodMapper.toDto(entity);
+
+        if (entity.getImagePath() != null) {
+            dto.setImageUrl("http://localhost:8080/catalog/images/" + entity.getImagePath());
+        }
+
+        return dto;
     }
 
     @Override

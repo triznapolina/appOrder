@@ -13,8 +13,9 @@ public class Food {
     private String name;
     private String shortDescription;
     private BigDecimal price;
-    private String categoryType;
+    private Long categoryId;
     private Boolean isActive;
     private LocalDate createdAt;
+    private String imageUrl;
 
 }
