@@ -55,4 +55,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .toList();
 
     }
+
+    @Override
+    public Long getIdByCategory(CategoryEntity category) {
+        return category.getId();
+    }
 }

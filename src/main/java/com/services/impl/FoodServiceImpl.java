@@ -138,8 +138,9 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<Food> getAllFoods() {
-        return foodRepository.findAll().stream().map(foodMapper::toDto).toList();
+    public Page<Food> getAllFoods(FilterRequest request) {
+        return foodRepository.findAll(PageRequest.of(request.getPage(), request.getSize()))
+                .map(foodMapper::toDto);
     }
 
 

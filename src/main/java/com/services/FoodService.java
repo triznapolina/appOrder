@@ -19,7 +19,7 @@ public interface FoodService {
 
     List<Food> deleteFood(Long foodId);
 
-    List<Food> getAllFoods();
+    Page<Food> getAllFoods(FilterRequest filterRequest);
 
     Food deactivateStatus(Long id, boolean active);
 

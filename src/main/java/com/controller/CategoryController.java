@@ -55,5 +55,10 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/food-category/all")
+    public ResponseEntity<Long> getIdByCategory(@RequestBody CategoryEntity category) {
+        return ResponseEntity.ok(categoryService.getIdByCategory(category));
+    }
+
 
 }

@@ -7,6 +7,7 @@ import com.services.FoodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,9 +66,10 @@ public class FoodController {
         return ResponseEntity.ok(foodService.getById(id));
     }
 
-    @GetMapping("/foods")
-    public ResponseEntity<List<Food>> getAllFoods() {
-        return ResponseEntity.ok(foodService.getAllFoods());
+    @GetMapping("/foods/all")
+    public ResponseEntity<Page<Food>> getAllFoods(@RequestParam int page, @RequestParam int size) {
+        FilterRequest filterRequest = new FilterRequest(page, size);
+        return ResponseEntity.ok(foodService.getAllFoods(filterRequest));
     }
 
     @GetMapping("/foods/category/{categoryId}")

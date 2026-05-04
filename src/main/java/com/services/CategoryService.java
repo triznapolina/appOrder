@@ -21,4 +21,5 @@ public interface CategoryService {
 
     List<Category> deleteCategoryById(Long id);
 
+    Long getIdByCategory(CategoryEntity category);
 }
