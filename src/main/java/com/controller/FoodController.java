@@ -2,6 +2,7 @@ package com.controller;
 
 import com.RequestsDTO.UpdaterRequestFood;
 import com.dto.Food;
+import com.entity.FoodEntity;
 import com.inHead.FilterRequest;
 import com.services.FoodService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,8 +89,15 @@ public class FoodController {
         return ResponseEntity.ok(foodService.findByPriceBetween(minRange, maxRange));
     }
 
-    @GetMapping("/images/{filename}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws IOException {
+    @GetMapping("/images/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable Long id) throws IOException {
+
+        Food entity = foodService.getById(id);
+        String filename = entity.getImageUrl();
+
+        if (filename.startsWith("http")) {
+            filename = filename.substring(filename.lastIndexOf("/") + 1);
+        }
 
         Path path = Paths.get("uploads").resolve(filename);
         Resource resource = new UrlResource(path.toUri());

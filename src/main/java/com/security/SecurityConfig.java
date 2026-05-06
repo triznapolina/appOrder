@@ -31,11 +31,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> {})
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/clients/**").permitAll()
+                        .requestMatchers("/cards/**").permitAll()
                         .requestMatchers("/restaurants/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/catalog/**").permitAll()
+                        .requestMatchers("/orders/**").permitAll()
                         .requestMatchers("/food-category/**").permitAll()
                         .requestMatchers( "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())

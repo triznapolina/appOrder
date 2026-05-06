@@ -11,6 +11,6 @@ public class UpdaterRequestFood {
     private String name;
     private String shortDescription;
     private BigDecimal price;
-    private Long categoryTypeId;
+    private Long categoryId;
 
 }

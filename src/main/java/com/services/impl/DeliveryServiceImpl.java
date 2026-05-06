@@ -4,9 +4,11 @@ import com.RequestsDTO.DeliveryRequest;
 import com.dto.OrderInfo;
 import com.entity.DeliveryEntity;
 import com.entity.OrderEntity;
+import com.entity.RestaurantEntity;
 import com.mapper.DeliveryMapper;
 import com.repository.DeliveryRepository;
 import com.repository.OrderRepository;
+import com.repository.RestaurantRepository;
 import com.services.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final DeliveryRepository deliveryRepository;
     private final OrderRepository orderRepository;
     private final DeliveryMapper deliveryMapper;
+    private final RestaurantRepository restaurantRepository;
 
     @Transactional
     @Override
@@ -26,12 +29,12 @@ public class DeliveryServiceImpl implements DeliveryService {
 
        DeliveryEntity deliveryEntity = deliveryMapper.toEntity(delivery);
        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+       RestaurantEntity restaurant = restaurantRepository.findById(delivery.getRestaurantId()).orElse(null);
 
        deliveryEntity.setOrder(orderEntity);
-       deliveryEntity.setTimeDelivery(delivery.getTimeDelivery());
        deliveryEntity.setAddress(delivery.getAddress());
-       deliveryEntity.setPaymentType(delivery.getPaymentType());
-       deliveryEntity.setIsInplace(delivery.getIsInplace());
+       deliveryEntity.setByCard(delivery.getByCard());
+       deliveryEntity.setRestaurant(restaurant);
        deliveryRepository.save(deliveryEntity);
 
        return deliveryMapper.toDto(deliveryEntity);

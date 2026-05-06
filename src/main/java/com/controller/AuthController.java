@@ -53,4 +53,9 @@ public class AuthController {
         return ResponseEntity.ok(jwtService.extractRole(token));
     }
 
+    @GetMapping("client/id")
+    public ResponseEntity<Long> extractId(@RequestParam String token) {
+        return ResponseEntity.ok(jwtService.extractId(token));
+    }
+
 }

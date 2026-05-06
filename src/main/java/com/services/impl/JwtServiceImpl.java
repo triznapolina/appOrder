@@ -132,4 +132,10 @@ public class JwtServiceImpl implements JwtService {
         return claims.get("role", String.class);
     }
 
+    @Override
+    public Long extractId(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("id", Long.class);
+    }
+
 }

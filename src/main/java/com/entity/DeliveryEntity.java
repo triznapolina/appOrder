@@ -20,17 +20,13 @@ public class DeliveryEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
-    @NotNull
-    @Column(name = "payment_type", nullable = false)
-    private Boolean paymentType = false;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "restaurant_id")
+    private RestaurantEntity restaurant;
 
     @NotNull
-    @Column(name = "time_delivery", nullable = false, length = Integer.MAX_VALUE)
-    private String timeDelivery;
-
-    @NotNull
-    @Column(name = "is_inPlace", nullable = false)
-    private Boolean isInplace = false;
+    @Column(name = "by_card", nullable = false)
+    private Boolean byCard = false;
 
     @Column(name = "address", length = Integer.MAX_VALUE)
     private String address;

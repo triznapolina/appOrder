@@ -30,8 +30,8 @@ public class ClientEntity extends JpaEnable implements UserDetails {
     @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)
     private String password;
 
-    @Column(name = "verification_code", length = Integer.MAX_VALUE)
-    private String verificationCode;
+    @Column(name = "address", length = Integer.MAX_VALUE)
+    private String address;
 
     @Column(name = "phone_number", length = Integer.MAX_VALUE)
     private String phoneNumber;
@@ -41,10 +41,6 @@ public class ClientEntity extends JpaEnable implements UserDetails {
 
     @Column(name = "status")
     private Boolean status;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "card_id")
-    private CardEntity cardEntity;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")

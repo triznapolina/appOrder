@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,10 +19,10 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByClientId(@Param("clientId") Long clientId);
 
     @Modifying
-    @Query("UPDATE OrderEntity f SET f.restaurantEntity.id = :restaurantId, f.shortDescription = :shortDescription " +
+    @Query("UPDATE OrderEntity f SET f.restaurantEntity.id = :restaurantId,f.isCompleted = :isCompleted, f.shortDescription = :shortDescription " +
             "WHERE f.id = :orderId")
     void updateOrder(@Param("orderId") Long orderId, @Param("restaurantId") Long restaurantId,
-                     @Param("shortDescription") String shortDescription);
+                     @Param("shortDescription") String shortDescription,@Param("isCompleted") Boolean isCompleted);
 
 
     @Query("SELECT o FROM OrderEntity o WHERE DATE(o.createdAt) = :date")
@@ -35,5 +36,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     @Modifying
     @Query("update OrderEntity f set f.isCancelled = :isCancelled where f.id = :orderId")
     void cancelled(Long orderId, boolean isCancelled);
+
+    OrderEntity findByClientIdAndIsCompletedFalse(Long clientId);
 
 }

@@ -1,6 +1,7 @@
 package com.services;
 
 import com.RequestsDTO.OrderRequest;
+import com.RequestsDTO.UpdaterOrderRequest;
 import com.dto.Order;
 import com.dto.OrderInfo;
 import com.inHead.FilterRequest;
@@ -17,7 +18,7 @@ public interface OrderService {
 
     OrderInfo createOrder(OrderRequest order);
 
-    OrderInfo updateOrder(Long id, OrderRequest request);
+    OrderInfo updateOrder(Long id, UpdaterOrderRequest request);
 
     List<Order> getOrderByCreated(LocalDate date);
 
@@ -29,6 +30,7 @@ public interface OrderService {
 
     OrderInfo updateTotalPriceInOrder(Long id);
 
-    // only admin
     Page<Order> getAllOrders(FilterRequest filterRequest);
+
+    Order getOrderIsNotCompletedByClientId(Long clientId);
 }

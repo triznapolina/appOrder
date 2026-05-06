@@ -26,4 +26,6 @@ public interface ClientService {
     ClientEntity getOne(String email);
 
     UserDetailsService userDetailsService();
+
+    String getClientAddress(Long clientId);
 }

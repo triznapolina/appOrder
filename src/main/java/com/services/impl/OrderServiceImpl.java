@@ -1,5 +1,8 @@
 package com.services.impl;
 
+import com.RequestsDTO.UpdaterOrderRequest;
+import com.dto.Client;
+import com.entity.ClientEntity;
 import com.entity.DeliveryEntity;
 import com.entity.OrderEntity;
 import com.entity.OrderItemEntity;
@@ -8,9 +11,11 @@ import com.dto.Order;
 import com.dto.OrderInfo;
 import com.inHead.FilterRequest;
 import com.mapper.OrderMapper;
+import com.repository.ClientRepository;
 import com.repository.DeliveryRepository;
 import com.repository.OrderItemRepository;
 import com.repository.OrderRepository;
+import com.services.JwtService;
 import com.services.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +35,21 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final DeliveryRepository deliveryRepository;
     private final OrderMapper orderMapper;
+    private final ClientRepository clientRepository;
 
     @Transactional
     @Override
     public OrderInfo createOrder(OrderRequest order) {
         OrderEntity entity = orderMapper.requestToEntity(order);
+
+        ClientEntity client = clientRepository.findById(order.getClientId())
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        entity.setClient(client);
+
         entity.setStatus("CREATED");
         entity.setIsCancelled(false);
+        entity.setIsCompleted(false);
 
         OrderEntity savedEntity = orderRepository.save(entity);
 
@@ -51,9 +64,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderInfo updateOrder(Long id, OrderRequest request) {
-        orderRepository.updateOrder(id, request.getRestaurantId(), request.getShortDescription());
-        orderRepository.setStatus(id, "UPDATED");
+    public OrderInfo updateOrder(Long id, UpdaterOrderRequest request) {
+        orderRepository.updateOrder(id, request.getDelivery().getRestaurantId(), request.getShortDescription(), true);
+        orderRepository.setStatus(id, "IN COOKING PROCESS");
 
         OrderEntity orderEntity = calculateAndSetTotalPrice(id);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
@@ -131,6 +144,10 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderMapper::toDto);
     }
 
+    @Override
+    public Order getOrderIsNotCompletedByClientId(Long clientId) {
+        return orderMapper.toDto(orderRepository.findByClientIdAndIsCompletedFalse(clientId));
+    }
 
     OrderEntity calculateAndSetTotalPrice(Long orderId) {
         OrderEntity order = orderRepository.findById(orderId).orElse(null);

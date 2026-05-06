@@ -1,6 +1,5 @@
 package com.dto;
 
-import com.entity.OrderItemEntity;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,15 +9,15 @@ import java.util.List;
 @Data
 public class OrderInfo {
 
+    private Long id;
     private Long clientId;
-    private Long restaurantId;
     private Long paymentId;
-    private Long deliveryId;
     private String status;
     private Boolean isCancelled;
+    private Boolean isCompleted;
     private String shortDescription;
     private BigDecimal totalPrice;
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     private List<OrderItem> list;
 
@@ -37,10 +36,9 @@ public class OrderInfo {
     public static class Delivery {
 
         private Long id;
-        private Boolean paymentType;
-        private String timeDelivery;
-        private Boolean isInplace;
+        private Boolean byCard;
         private String address;
+        private Long restaurantId;
 
     }
 

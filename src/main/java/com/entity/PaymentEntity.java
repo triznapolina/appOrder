@@ -17,10 +17,6 @@ public class PaymentEntity extends JpaEnable {
     private Long id;
 
     @NotNull
-    @Column(name = "identification_number", nullable = false, length = Integer.MAX_VALUE)
-    private String identificationNumber;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "card_id", nullable = false)
     private CardEntity cardEntity;

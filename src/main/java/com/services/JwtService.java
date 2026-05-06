@@ -18,6 +18,7 @@ public interface JwtService {
     <T> T extractClaim(String token, Function<Claims, T> claimsResolvers);
     String extractEmail(String token);
     String extractRole(String token);
+    Long extractId(String token);
 
     boolean isTokenValid(String token, UserDetails userDetails);
     boolean validateAccessToken(@NonNull String accessToken);

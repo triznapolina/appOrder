@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItemEntity, Long> {
 
-    @Query("select r from OrderItemEntity r where r.orderEntity.id = :orderId")
+    @Query("SELECT i FROM OrderItemEntity i WHERE i.orderEntity.id = :orderId ORDER BY i.id ASC")
     List<OrderItemEntity> findByOrderId(Long orderId);
 
     @Query("select r from OrderItemEntity r where r.orderEntity.id = :orderId and r.foodEntity.id = :foodId")
@@ -27,4 +28,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItemEntity, Long
                                              @Param("quantity") Integer quantity,
                                              @Param("orderId") Long orderId,
                                              @Param("foodId") Long foodId);
+
+
+
 }

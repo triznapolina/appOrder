@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
@@ -97,5 +99,10 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public UserDetailsService userDetailsService() {
         return this::getOne;
+    }
+
+    @Override
+    public String getClientAddress(Long clientId) {
+        return Objects.requireNonNull(clientRepository.findById(clientId).orElse(null)).getAddress();
     }
 }

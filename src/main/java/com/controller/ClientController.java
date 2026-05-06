@@ -33,6 +33,11 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
+    @GetMapping("/address/{clientId}")
+    public ResponseEntity<String> getClientAddress(@PathVariable Long clientId) {
+        return ResponseEntity.ok(clientService.getClientAddress(clientId));
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{clientId}")
     public ResponseEntity<Void> deleteClientById(@PathVariable Long clientId) {

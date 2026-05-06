@@ -97,7 +97,7 @@ public class FoodServiceImpl implements FoodService {
     public Food updateFood(Long foodId, UpdaterRequestFood food) {
 
         foodRepository.updateFood(foodId, food.getName(), food.getShortDescription(),
-                                  food.getPrice(), food.getCategoryTypeId());
+                                  food.getPrice(), food.getCategoryId());
 
         foodRepository.setIsActive(foodId, true);
 
