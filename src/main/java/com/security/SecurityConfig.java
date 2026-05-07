@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers("/clients/**").permitAll()
                         .requestMatchers("/cards/**").permitAll()
                         .requestMatchers("/restaurants/**").permitAll()
+                        .requestMatchers("/delivery/**").permitAll()
+                        .requestMatchers("/payments/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/catalog/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()

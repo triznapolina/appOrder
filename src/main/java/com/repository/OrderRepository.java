@@ -19,9 +19,10 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByClientId(@Param("clientId") Long clientId);
 
     @Modifying
-    @Query("UPDATE OrderEntity f SET f.restaurantEntity.id = :restaurantId,f.isCompleted = :isCompleted, f.shortDescription = :shortDescription " +
+    @Query("UPDATE OrderEntity f SET f.restaurantEntity.id = :restaurantId,f.isCompleted = :isCompleted, " +
+            "f.shortDescription = :shortDescription, f.number = :number " +
             "WHERE f.id = :orderId")
-    void updateOrder(@Param("orderId") Long orderId, @Param("restaurantId") Long restaurantId,
+    void updateOrder(@Param("orderId") Long orderId, @Param("restaurantId") Long restaurantId, @Param("number") Integer number,
                      @Param("shortDescription") String shortDescription,@Param("isCompleted") Boolean isCompleted);
 
 
@@ -39,4 +40,5 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     OrderEntity findByClientIdAndIsCompletedFalse(Long clientId);
 
+    boolean existsByNumber(int createdNumber);
 }

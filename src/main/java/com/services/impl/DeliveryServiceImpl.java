@@ -31,7 +31,7 @@ public class DeliveryServiceImpl implements DeliveryService {
        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
        RestaurantEntity restaurant = restaurantRepository.findById(delivery.getRestaurantId()).orElse(null);
 
-       deliveryEntity.setOrder(orderEntity);
+       deliveryEntity.setOrderEntity(orderEntity);
        deliveryEntity.setAddress(delivery.getAddress());
        deliveryEntity.setByCard(delivery.getByCard());
        deliveryEntity.setRestaurant(restaurant);
@@ -42,7 +42,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
 
     @Override
-    public OrderInfo.Delivery getDeliveryInfoOfOrder(Long orderId, Long deliveryId) {
-        return deliveryMapper.toDto(deliveryRepository.findByDeliveryIdAndOrderId(deliveryId, orderId));
+    public OrderInfo.Delivery getDeliveryInfoOfOrder(Long orderId) {
+        return deliveryMapper.toDto(deliveryRepository.findByOrderEntityId(orderId).orElse(null));
     }
 }

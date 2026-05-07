@@ -6,6 +6,6 @@ public interface DeliveryService {
 
     OrderInfo.Delivery createDeliveryInfo(OrderInfo.Delivery delivery, Long orderId);
 
-    OrderInfo.Delivery getDeliveryInfoOfOrder(Long orderId, Long deliveryId);
+    OrderInfo.Delivery getDeliveryInfoOfOrder(Long orderId);
 
 }

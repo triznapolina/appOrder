@@ -18,6 +18,9 @@ public class OrderEntity extends JpaEnable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "created_number", unique = true)
+    private Integer number;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)

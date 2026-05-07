@@ -339,9 +339,15 @@ databaseChangeLog:
                   constraints:
                     nullable: true
               - column:
+                  name: created_number
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
                   name: total_price
                   type: decimal(10,2)
                   constraints:
+                    unique: true
                     nullable: true
               - column:
                   name: created_at

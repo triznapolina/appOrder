@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity orderEntity = calculateAndSetTotalPrice(savedEntity.getId());
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(savedEntity.getId());
 
-        DeliveryEntity delivery = deliveryRepository.findByOrderId(savedEntity.getId());
+        DeliveryEntity delivery = deliveryRepository.findByOrderEntityId(savedEntity.getId()).orElse(null);
 
         return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
@@ -65,13 +66,21 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderInfo updateOrder(Long id, UpdaterOrderRequest request) {
-        orderRepository.updateOrder(id, request.getDelivery().getRestaurantId(), request.getShortDescription(), true);
+
+        int createdNumber;
+        do {
+            createdNumber = ThreadLocalRandom.current()
+                    .nextInt(100000, 999999);
+        } while (orderRepository.existsByNumber(createdNumber));
+
+        orderRepository.updateOrder(id, request.getDelivery().getRestaurantId(),
+                createdNumber, request.getShortDescription(), true);
         orderRepository.setStatus(id, "IN COOKING PROCESS");
 
         OrderEntity orderEntity = calculateAndSetTotalPrice(id);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
 
-        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderEntity.getId());
+        DeliveryEntity delivery = deliveryRepository.findByOrderEntityId(orderEntity.getId()).orElse(null);
 
         return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
@@ -81,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderInfo getOrder(Long id) {
         OrderEntity orderEntity = orderRepository.findById(id).orElse(null);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(id);
-        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderEntity.getId());
+        DeliveryEntity delivery = deliveryRepository.findByOrderEntityId(orderEntity.getId()).orElse(null);
 
         return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }
@@ -91,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Long orderId) {
 
         List<OrderItemEntity> orderItemsToDelete = orderItemRepository.findByOrderId(orderId);
-        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderId);
+        DeliveryEntity delivery = deliveryRepository.findByOrderEntityId(orderId).orElse(null);
         if (!orderItemsToDelete.isEmpty() && delivery != null) {
             orderItemRepository.deleteAll(orderItemsToDelete);
             deliveryRepository.delete(delivery);
@@ -119,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
 
         OrderEntity orderEntity = calculateAndSetTotalPrice(orderId);
         List<OrderItemEntity> list = orderItemRepository.findByOrderId(orderId);
-        DeliveryEntity delivery = deliveryRepository.findByOrderId(orderId);
+        DeliveryEntity delivery = deliveryRepository.findByOrderEntityId(orderId).orElse(null);
 
         return orderMapper.toDtoInfo(orderEntity, list, delivery);
     }

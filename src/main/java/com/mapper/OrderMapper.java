@@ -25,6 +25,7 @@ public interface OrderMapper {
     @Mapping(target = "paymentId", source = "orderEntity.paymentEntity.id")
     @Mapping(target = "clientId", source = "orderEntity.client.id")
     @Mapping(target = "list", source = "orderItemList")
+    @Mapping(target = "delivery", source = "delivery")
     OrderInfo toDtoInfo(OrderEntity orderEntity, List<OrderItemEntity> orderItemList, DeliveryEntity delivery);
 
     @Mapping(target = "foodId", source = "foodEntity.id")

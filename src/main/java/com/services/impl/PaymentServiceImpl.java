@@ -37,4 +37,19 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentEntity;
     }
+
+    @Override
+    public PaymentEntity getPaymentById(Long orderId) {
+
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        PaymentEntity paymentEntity = orderEntity.getPaymentEntity();
+
+        if (paymentEntity == null) {
+            throw new RuntimeException("Payment not found");
+        }
+
+        return paymentEntity;
+    }
 }
