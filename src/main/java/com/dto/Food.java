@@ -11,6 +11,7 @@ public class Food {
 
     private Long id;
     private String name;
+    private String ingredientsDescription;
     private String shortDescription;
     private BigDecimal price;
     private Long categoryId;

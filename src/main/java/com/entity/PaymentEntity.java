@@ -16,9 +16,8 @@ public class PaymentEntity extends JpaEnable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "card_id", nullable = false)
+    @JoinColumn(name = "card_id")
     private CardEntity cardEntity;
 
     @NotNull

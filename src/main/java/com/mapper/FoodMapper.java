@@ -24,7 +24,7 @@ public interface FoodMapper {
     Food toDto(FoodEntity foodEntity);
 
     @Named("localDateTimeToDate")
-    public static Date localDateTimeToDate(LocalDateTime dateTime) {
+    static Date localDateTimeToDate(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }

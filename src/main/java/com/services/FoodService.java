@@ -15,15 +15,11 @@ public interface FoodService {
 
     Food getById(Long id);
 
-    Food updateFood(Long foodId, UpdaterRequestFood food);
+    Food updateFood(Long foodId, UpdaterRequestFood food, MultipartFile image);
 
     List<Food> deleteFood(Long foodId);
 
     Page<Food> getAllFoods(FilterRequest filterRequest);
-
-    Food deactivateStatus(Long id, boolean active);
-
-    Food activateStatus(Long id, boolean active);
 
     List<Food> findByCategoryId(Long categoryId);
 
@@ -31,4 +27,5 @@ public interface FoodService {
 
     List<Food> findByPriceBetween(BigDecimal minRange, BigDecimal maxRange);
 
+    List<Food> filterByPriceBetweenAndCategory(Long categoryId, BigDecimal minRange, BigDecimal maxRange);
 }

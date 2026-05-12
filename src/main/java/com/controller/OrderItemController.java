@@ -27,10 +27,9 @@ public class OrderItemController {
         return orderItemService.updateItem(request);
     }
 
-    // 🔹 Удалить item из заказа
-    @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable("id") Long orderItemId) {
-        orderItemService.deleteItem(orderItemId);
+    @DeleteMapping("delete/{orderId}")
+    public void deleteItem(@PathVariable("orderId") Long orderId, @RequestParam Long foodId) {
+        orderItemService.deleteItem(orderId, foodId);
     }
 
     // 🔹 Получить item по id

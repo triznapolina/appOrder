@@ -8,4 +8,5 @@ public class ClientRequest {
     private Long id;
     private String phoneNumber;
     private String fullName;
+    private String address;
 }

@@ -51,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
         entity.setStatus("CREATED");
         entity.setIsCancelled(false);
         entity.setIsCompleted(false);
+        entity.setIsDeleted(false);
 
         OrderEntity savedEntity = orderRepository.save(entity);
 
@@ -109,6 +110,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(orderId);
     }
 
+    @Transactional
     @Override
     public void cancelledOrder(Long id, boolean type) {
         orderRepository.cancelled(id, type);
@@ -156,6 +158,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderIsNotCompletedByClientId(Long clientId) {
         return orderMapper.toDto(orderRepository.findByClientIdAndIsCompletedFalse(clientId));
+    }
+
+    @Override
+    public List<Order> getOrdersByStatus(Long clientId, String status) {
+        return orderRepository.findByClientIdAndStatus(clientId, status).stream().map(orderMapper::toDto).toList();
+    }
+
+    @Transactional
+    @Override
+    public void updateIsDeleted(Long id, Boolean status) {
+        orderRepository.setIsDeleted(id, status);
     }
 
     OrderEntity calculateAndSetTotalPrice(Long orderId) {

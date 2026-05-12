@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentEntity getPaymentById(Long orderId) {
+    public PaymentEntity getPaymentByOrderId(Long orderId) {
 
         OrderEntity orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -51,5 +51,11 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         return paymentEntity;
+    }
+
+
+    @Override
+    public PaymentEntity getPaymentById(Long id) {
+        return paymentRepository.findById(id).orElse(null);
     }
 }

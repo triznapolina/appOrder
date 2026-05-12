@@ -33,4 +33,8 @@ public interface OrderService {
     Page<Order> getAllOrders(FilterRequest filterRequest);
 
     Order getOrderIsNotCompletedByClientId(Long clientId);
+
+    List<Order> getOrdersByStatus(Long clientId, String status);
+
+    void updateIsDeleted(Long id, Boolean status);
 }

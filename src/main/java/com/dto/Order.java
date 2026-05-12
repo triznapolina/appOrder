@@ -10,13 +10,12 @@ public class Order {
 
     private Long id;
     private Long clientId;
-    private Long restaurantId;
-    private Long paymentId;
-    private Long deliveryId;
+    private Integer number;
     private String status;
-    private Boolean isCancelled;
+    private Boolean isDeleted;
+    private Boolean isCompleted;
     private String shortDescription;
     private BigDecimal totalPrice;
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
 }

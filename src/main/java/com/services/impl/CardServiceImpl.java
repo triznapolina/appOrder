@@ -3,11 +3,15 @@ package com.services.impl;
 import com.RequestsDTO.CardRequest;
 import com.entity.CardEntity;
 import com.entity.ClientEntity;
+import com.entity.PaymentEntity;
 import com.repository.CardRepository;
 import com.repository.ClientRepository;
+import com.repository.OrderRepository;
+import com.repository.PaymentRepository;
 import com.services.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +23,9 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     private final ClientRepository clientRepository;
+    private final PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
+
     @Override
     public CardEntity create(Long clientId, CardRequest request) {
 
@@ -45,8 +52,18 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
+        List<PaymentEntity> payments =
+                paymentRepository.findAllByCardEntityId(id);
+
+        for (PaymentEntity payment : payments) {
+            payment.setCardEntity(null);
+
+        }
+
+        paymentRepository.saveAll(payments);
         cardRepository.deleteById(id);
     }
 }

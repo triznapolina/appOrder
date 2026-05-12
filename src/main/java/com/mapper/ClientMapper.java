@@ -6,12 +6,15 @@ import com.entity.ClientEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.Mappings;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ClientMapper {
 
+    @Mapping(target = "address", source = "address")
     Client toDto(ClientEntity entity);
 
+    @Mapping(target = "address", source = "address")
     ClientEntity toEntity(Client client);
 
     UserInfo toAllInfo(ClientEntity entity);

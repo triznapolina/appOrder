@@ -61,14 +61,24 @@ public class OrderController {
         return orderService.getOrderIsNotCompletedByClientId(clientId);
     }
 
-    @PatchMapping("/{id}/cancel")
-    public void cancelOrder(@PathVariable Long id, @RequestParam boolean type) {
+    @GetMapping("/status/{clientId}")
+    public List<Order> getOrdersByStatus(@PathVariable Long clientId, @RequestParam String status) {
+        return orderService.getOrdersByStatus(clientId, status);
+    }
+
+    @PatchMapping("/{id}/ready")
+    public void completeForPickUpOrder(@PathVariable Long id, @RequestParam boolean type) {
         orderService.cancelledOrder(id, type);
     }
 
     @PatchMapping("/{id}/status")
     public Order updateStatus(@PathVariable Long id, @RequestParam String status) {
         return orderService.updateStatusOrder(id, status);
+    }
+
+    @PatchMapping("/{id}/deleted")
+    public void setIsDeleted(@PathVariable Long id, @RequestParam Boolean status) {
+        orderService.updateIsDeleted(id, status);
     }
 
     @PatchMapping("/{id}/total")

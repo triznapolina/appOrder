@@ -19,7 +19,12 @@ public class PaymentController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<PaymentEntity> getPaymentById(@PathVariable Long orderId) {
-        return ResponseEntity.ok(paymentService.getPaymentById(orderId));
+    public ResponseEntity<PaymentEntity> getPaymentByOrderId(@PathVariable Long orderId) {
+        return ResponseEntity.ok(paymentService.getPaymentByOrderId(orderId));
+    }
+
+    @GetMapping("by/{id}")
+    public ResponseEntity<PaymentEntity> getPaymentById(@PathVariable Long id) {
+        return ResponseEntity.ok(paymentService.getPaymentById(id));
     }
 }

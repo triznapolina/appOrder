@@ -23,6 +23,7 @@ public interface JwtService {
     boolean isTokenValid(String token, UserDetails userDetails);
     boolean validateAccessToken(@NonNull String accessToken);
     boolean validateRefreshToken(@NonNull String refreshToken);
+    Claims getRefreshClaims(@NonNull String token);
 
     boolean isTokenExpired(String token);
     Date extractExpiration(String token);

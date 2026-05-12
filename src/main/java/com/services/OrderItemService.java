@@ -9,7 +9,7 @@ public interface OrderItemService {
 
     OrderInfo.OrderItem updateItem(OrderItemRequest orderItem);
 
-    void deleteItem(Long orderItemId);
+    void deleteItem(Long orderId, Long foodId);
 
     OrderInfo.OrderItem findById(Long orderItemId);
 

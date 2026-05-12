@@ -37,7 +37,7 @@ public class OrderEntity extends JpaEnable {
     @Column(name = "status",  length = Integer.MAX_VALUE)
     private String status;
 
-    @Column(name = "is_cancelled")
+    @Column(name = "is_ready")
     private Boolean isCancelled;
 
     @Column(name = "short_description", length = Integer.MAX_VALUE)
@@ -48,4 +48,7 @@ public class OrderEntity extends JpaEnable {
 
     @Column(name = "is_completed")
     private Boolean isCompleted;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 }

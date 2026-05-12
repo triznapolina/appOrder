@@ -29,13 +29,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 
        DeliveryEntity deliveryEntity = deliveryMapper.toEntity(delivery);
        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
-       RestaurantEntity restaurant = restaurantRepository.findById(delivery.getRestaurantId()).orElse(null);
 
        deliveryEntity.setOrderEntity(orderEntity);
        deliveryEntity.setAddress(delivery.getAddress());
        deliveryEntity.setByCard(delivery.getByCard());
-       deliveryEntity.setRestaurant(restaurant);
        deliveryRepository.save(deliveryEntity);
+
+       if(delivery.getRestaurantId() != null) {
+           RestaurantEntity restaurant = restaurantRepository.findById(delivery.getRestaurantId()).orElse(null);
+           deliveryEntity.setRestaurant(restaurant);
+       }
 
        return deliveryMapper.toDto(deliveryEntity);
     }

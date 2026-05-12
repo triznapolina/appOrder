@@ -40,27 +40,19 @@ public class FoodController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/foods/{foodId}")
-    public ResponseEntity<Food> updateFood(@PathVariable Long foodId, @RequestBody UpdaterRequestFood food) {
-        return ResponseEntity.ok(foodService.updateFood(foodId, food));
+    @PutMapping(value = "/foods/{foodId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Food> updateFood(
+            @PathVariable Long foodId,
+            @RequestPart("food") UpdaterRequestFood food,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        return ResponseEntity.ok(foodService.updateFood(foodId, food, image));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/foods/{foodId}")
     public ResponseEntity<List<Food>> deleteFood(@PathVariable Long foodId) {
         return ResponseEntity.ok(foodService.deleteFood(foodId));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/foods/{id}/deactivate")
-    public ResponseEntity<Food> deactivateStatus(@PathVariable Long id, @RequestParam boolean active) {
-        return ResponseEntity.ok(foodService.deactivateStatus(id, active));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/foods/{id}/activate")
-    public ResponseEntity<Food> activateStatus(@PathVariable Long id, @RequestParam boolean active) {
-        return ResponseEntity.ok(foodService.activateStatus(id, active));
     }
 
     @GetMapping("/foods/{id}")
@@ -87,6 +79,14 @@ public class FoodController {
     @GetMapping("/foods/price")
     public ResponseEntity<List<Food>> findByPriceBetween(@RequestParam BigDecimal minRange, @RequestParam BigDecimal maxRange) {
         return ResponseEntity.ok(foodService.findByPriceBetween(minRange, maxRange));
+    }
+
+
+    @GetMapping("/filter-by-category/price")
+    public ResponseEntity<List<Food>> filterByPriceBetweenAndCategory(@RequestParam Long categoryId,
+                                                                      @RequestParam BigDecimal minRange,
+                                                                      @RequestParam BigDecimal maxRange) {
+        return ResponseEntity.ok(foodService.filterByPriceBetweenAndCategory(categoryId, minRange, maxRange));
     }
 
     @GetMapping("/images/{id}")

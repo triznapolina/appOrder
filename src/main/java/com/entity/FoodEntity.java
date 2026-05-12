@@ -22,6 +22,9 @@ public class FoodEntity extends JpaEnable {
     @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
     private String name;
 
+    @Column(name = "ingredients_description", length = Integer.MAX_VALUE)
+    private String ingredientsDescription;
+
     @NotNull
     @Column(name = "short_description", nullable = false, length = Integer.MAX_VALUE)
     private String shortDescription;
@@ -37,9 +40,5 @@ public class FoodEntity extends JpaEnable {
 
     @Column(name = "image_path")
     private String imagePath;
-
-    @NotNull
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = false;
 
 }

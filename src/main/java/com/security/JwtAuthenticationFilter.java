@@ -2,6 +2,7 @@ package com.security;
 
 import com.services.ClientService;
 import com.services.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,36 +31,77 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final ClientService clientService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
 
-        var authHeader = request.getHeader(HEADER_NAME);
-        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
+        if (request.getServletPath().equals("/auth/token")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        var jwt = authHeader.substring(BEARER_PREFIX.length());
-        var username = jwtService.extractEmail(jwt);
+        var authHeader = request.getHeader(HEADER_NAME);
 
-        if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            UserDetails userDetails = clientService.userDetailsService().loadUserByUsername(username);
-
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
-
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                context.setAuthentication(authToken);
-                SecurityContextHolder.setContext(context);
-            }
+        if (
+                StringUtils.isEmpty(authHeader) ||
+                        !StringUtils.startsWith(authHeader, BEARER_PREFIX)
+        ) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        try {
+
+            var jwt =
+                    authHeader.substring(BEARER_PREFIX.length());
+
+            var username =
+                    jwtService.extractEmail(jwt);
+
+            if (
+                    StringUtils.isNotEmpty(username) &&
+                            SecurityContextHolder.getContext()
+                                    .getAuthentication() == null
+            ) {
+
+                UserDetails userDetails =
+                        clientService.userDetailsService()
+                                .loadUserByUsername(username);
+
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+
+                    SecurityContext context =
+                            SecurityContextHolder.createEmptyContext();
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource()
+                                    .buildDetails(request)
+                    );
+
+                    context.setAuthentication(authToken);
+
+                    SecurityContextHolder.setContext(context);
+                }
+            }
+
+        } catch (ExpiredJwtException e) {
+
+            response.setStatus(
+                    HttpServletResponse.SC_UNAUTHORIZED
+            );
+
+            return;
+        }
+
         filterChain.doFilter(request, response);
     }
 }

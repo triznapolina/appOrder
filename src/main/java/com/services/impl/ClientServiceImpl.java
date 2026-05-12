@@ -44,6 +44,8 @@ public class ClientServiceImpl implements ClientService {
 
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setAddress(request.getAddress());
+        user.setEmail(user.getEmail());
         user = clientRepository.save(user);
         return clientMapper.toDto(user);
     }

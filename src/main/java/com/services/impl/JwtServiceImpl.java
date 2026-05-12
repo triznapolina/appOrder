@@ -57,6 +57,11 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
+    public Claims getRefreshClaims(@NonNull String token) {
+        return extractAllClaims(token);
+    }
+
+    @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails user, long expiryTime) {
         return Jwts.builder()
                 .setClaims(extraClaims)

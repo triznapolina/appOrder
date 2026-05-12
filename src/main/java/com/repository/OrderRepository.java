@@ -30,6 +30,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findByDateCreatedAt(@Param("date") LocalDate date);
 
 
+    List<OrderEntity> findByClientIdAndStatus(Long clientId, String status);
+
     @Modifying
     @Query("update OrderEntity f set f.status = :status where f.id = :orderId")
     void setStatus(Long orderId, String status);
@@ -41,4 +43,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     OrderEntity findByClientIdAndIsCompletedFalse(Long clientId);
 
     boolean existsByNumber(int createdNumber);
+
+    @Modifying
+    @Query("update OrderEntity f set f.isDeleted = :status where f.id = :orderId")
+    void setIsDeleted(@Param("orderId") Long orderId, @Param("status") Boolean status);
 }

@@ -15,6 +15,8 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface OrderMapper {
 
+    @Mapping(target = "clientId", source = "orderEntity.client.id")
+    @Mapping(target = "isDeleted", source = "isDeleted")
     Order toDto(OrderEntity orderEntity);
 
     OrderEntity toEntity(Order order);
@@ -26,6 +28,9 @@ public interface OrderMapper {
     @Mapping(target = "clientId", source = "orderEntity.client.id")
     @Mapping(target = "list", source = "orderItemList")
     @Mapping(target = "delivery", source = "delivery")
+    @Mapping(target = "number", source = "orderEntity.number")
+    @Mapping(target = "isDeleted", source = "orderEntity.isDeleted")
+    @Mapping(target = "createdAt", source = "orderEntity.createdAt")
     OrderInfo toDtoInfo(OrderEntity orderEntity, List<OrderItemEntity> orderItemList, DeliveryEntity delivery);
 
     @Mapping(target = "foodId", source = "foodEntity.id")

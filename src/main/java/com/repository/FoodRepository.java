@@ -1,5 +1,6 @@
 package com.repository;
 
+import com.entity.CategoryEntity;
 import com.entity.FoodEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,18 +22,21 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
             @Param("shortDescription") String shortDescription, @Param("price") BigDecimal price,
             @Param("categoryId") Long categoryId);
 
-    @Modifying
-    @Query("update FoodEntity f set f.isActive = :status where f.id = :foodId")
-    void setIsActive(@Param("foodId") Long foodId, boolean status);
-
     List<FoodEntity> findFoodByName(String foodName);
 
-    @Query("SELECT f FROM FoodEntity f WHERE f.categoryEntity.id = :categoryId")
-    List<FoodEntity> findByCategoryId(@Param("categoryId") Long categoryId);
+    List<FoodEntity> findByCategoryEntityId(Long categoryId);
 
-    @Query("SELECT f FROM FoodEntity f where f.price between :minRange and :maxRange")
-    List<FoodEntity> findFoodByPrice(@Param("minRange") BigDecimal minRange,
-                                     @Param("maxRange") BigDecimal maxRange);
+    @Query("""
+          SELECT f FROM FoodEntity f
+          WHERE f.price BETWEEN :minRange AND :maxRange
+          AND f.categoryEntity.id = :categoryId
+    """)
+    List<FoodEntity> findFoodByPriceAndCategory(
+            @Param("categoryId") Long categoryId,
+            @Param("minRange") BigDecimal minRange,
+            @Param("maxRange") BigDecimal maxRange
+    );
 
+    List<FoodEntity> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 
 }

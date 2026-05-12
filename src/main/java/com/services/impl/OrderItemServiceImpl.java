@@ -69,9 +69,11 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemMapper.toDto(orderItemRepository.findByOrderAndFood(request.getOrderId(), request.getFoodId()));
     }
 
+    @Transactional
     @Override
-    public void deleteItem(Long orderItemId) {
-        orderItemRepository.deleteById(orderItemId);
+    public void deleteItem(Long orderId, Long foodId) {
+        orderItemRepository.delete(orderItemRepository.findByOrderAndFood(orderId, foodId));
+        orderItemRepository.flush();
     }
 
     @Override

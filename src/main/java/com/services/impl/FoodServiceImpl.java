@@ -79,31 +79,45 @@ public class FoodServiceImpl implements FoodService {
         return dto;
     }
 
-    @Override
-    public Food deactivateStatus(Long id, boolean active) {
-        foodRepository.setIsActive(id, false);
-        return foodMapper.toDto(foodRepository.findById(id).orElse(null));
-    }
-
-    @Override
-    public Food activateStatus(Long id, boolean active) {
-        foodRepository.setIsActive(id, true);
-        return foodMapper.toDto(foodRepository.findById(id).orElse(null));
-    }
-
 
     @Override
     @Transactional
-    public Food updateFood(Long foodId, UpdaterRequestFood food) {
+    public Food updateFood(Long foodId, UpdaterRequestFood food, MultipartFile image) {
+
+        FoodEntity foodEntity = foodRepository.findById(foodId)
+                .orElseThrow(() -> new RuntimeException("Блюдо не найдено"));
 
         foodRepository.updateFood(foodId, food.getName(), food.getShortDescription(),
-                                  food.getPrice(), food.getCategoryId());
+                food.getPrice(), food.getCategoryId());
 
-        foodRepository.setIsActive(foodId, true);
+        if (image != null && !image.isEmpty()) {
 
-        FoodEntity foodEntity = foodRepository.findById(foodId).orElse(null);
+            try {
 
-        return foodMapper.toDto(foodEntity);
+                String original = image.getOriginalFilename();
+
+                String extension = original != null && original.contains(".")
+                        ? original.substring(original.lastIndexOf("."))
+                        : ".jpg";
+
+                String fileName = UUID.randomUUID() + extension;
+
+                Path path = Paths.get(System.getProperty("user.dir"),
+                        "uploads",
+                        fileName);
+
+                Files.createDirectories(path.getParent());
+
+                Files.write(path, image.getBytes());
+
+                foodEntity.setImagePath(fileName);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Ошибка сохранения файла", e);
+            }
+        }
+
+        return foodMapper.toDto(foodRepository.save(foodEntity));
     }
 
     @Override
@@ -125,14 +139,21 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<Food> findByPriceBetween(BigDecimal minRange, BigDecimal maxRange) {
-        return foodRepository.findFoodByPrice(minRange,maxRange).stream()
+        return foodRepository.findByPriceBetween(minRange,maxRange).stream()
+                .map(foodMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<Food> filterByPriceBetweenAndCategory(Long categoryId, BigDecimal minRange, BigDecimal maxRange) {
+        return foodRepository.findFoodByPriceAndCategory(categoryId, minRange, maxRange).stream()
                 .map(foodMapper::toDto)
                 .toList();
     }
 
     @Override
     public List<Food> findByCategoryId(Long categoryId) {
-        return foodRepository.findByCategoryId(categoryId).stream()
+        return foodRepository.findByCategoryEntityId(categoryId).stream()
                 .map(foodMapper::toDto)
                 .toList();
     }

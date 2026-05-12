@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class UpdaterRequestFood {
     private String name;
     private String shortDescription;
+    private String ingredientsDescription;
     private BigDecimal price;
     private Long categoryId;
 

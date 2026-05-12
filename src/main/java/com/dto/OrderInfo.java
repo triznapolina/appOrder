@@ -15,9 +15,11 @@ public class OrderInfo {
     private String status;
     private Boolean isCancelled;
     private Boolean isCompleted;
+    private Boolean isDeleted;
     private String shortDescription;
     private BigDecimal totalPrice;
     private LocalDateTime createdAt;
+    private Integer number;
 
     private List<OrderItem> list;
 
