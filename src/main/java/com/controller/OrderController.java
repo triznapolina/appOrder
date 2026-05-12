@@ -8,7 +8,10 @@ import com.inHead.FilterRequest;
 import com.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -89,5 +92,21 @@ public class OrderController {
     @PostMapping("/filter")
     public Page<Order> getAllOrders(@RequestBody FilterRequest filterRequest) {
         return orderService.getAllOrders(filterRequest);
+    }
+
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<Order>> filterOrders(
+            @RequestParam(required = false) Integer filter,
+            @RequestParam(required = false) String value,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Order> orders = orderService.filterOrders(filter, value, pageable);
+
+        return ResponseEntity.ok(orders);
     }
 }

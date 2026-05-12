@@ -21,11 +21,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -170,6 +172,54 @@ public class OrderServiceImpl implements OrderService {
     public void updateIsDeleted(Long id, Boolean status) {
         orderRepository.setIsDeleted(id, status);
     }
+
+
+    @Transactional
+    @Override
+    public Page<Order> filterOrders(Integer filter, String value, Pageable pageable) {
+
+        if (filter == null) {
+            int number = Integer.parseInt(value);
+
+            return orderRepository
+                    .findByNumber(number, pageable)
+                    .map(orderMapper::toDto);
+        }
+
+        return switch (filter) {
+
+            case 1 -> {
+                Long clientId = clientRepository.findByEmail(value)
+                        .orElseThrow(() -> new RuntimeException("Client not found"))
+                        .getId();
+
+                yield orderRepository
+                        .findByClientId(clientId, pageable)
+                        .map(orderMapper::toDto);
+            }
+
+            case 2 -> {
+                LocalDate date = LocalDate.parse(value);
+
+                yield orderRepository
+                        .findByCreatedAtDate(date, pageable)
+                        .map(orderMapper::toDto);
+            }
+
+            case 3 -> orderRepository
+                    .findByStatusIgnoreCase(value, pageable)
+                    .map(orderMapper::toDto);
+
+            default -> {
+                int number = Integer.parseInt(value);
+
+                yield orderRepository
+                        .findByNumber(number, pageable)
+                        .map(orderMapper::toDto);
+            }
+        };
+    }
+
 
     OrderEntity calculateAndSetTotalPrice(Long orderId) {
         OrderEntity order = orderRepository.findById(orderId).orElse(null);

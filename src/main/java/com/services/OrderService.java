@@ -6,6 +6,7 @@ import com.dto.Order;
 import com.dto.OrderInfo;
 import com.inHead.FilterRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,4 +38,6 @@ public interface OrderService {
     List<Order> getOrdersByStatus(Long clientId, String status);
 
     void updateIsDeleted(Long id, Boolean status);
+
+    Page<Order> filterOrders(Integer filter, String value, Pageable pageable);
 }

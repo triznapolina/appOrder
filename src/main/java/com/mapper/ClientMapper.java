@@ -12,9 +12,11 @@ import org.mapstruct.Mappings;
 public interface ClientMapper {
 
     @Mapping(target = "address", source = "address")
+    @Mapping(target = "role", source = "role")
     Client toDto(ClientEntity entity);
 
     @Mapping(target = "address", source = "address")
+    @Mapping(target = "role", source = "role")
     ClientEntity toEntity(Client client);
 
     UserInfo toAllInfo(ClientEntity entity);

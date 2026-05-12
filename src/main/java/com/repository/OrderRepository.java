@@ -1,6 +1,8 @@
 package com.repository;
 
 import com.entity.OrderEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,4 +49,21 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     @Modifying
     @Query("update OrderEntity f set f.isDeleted = :status where f.id = :orderId")
     void setIsDeleted(@Param("orderId") Long orderId, @Param("status") Boolean status);
+
+
+    Page<OrderEntity> findByNumber(Integer number, Pageable pageable);
+
+    Page<OrderEntity> findByClientId(Long clientId, Pageable pageable);
+
+    Page<OrderEntity> findByStatusIgnoreCase(String status, Pageable pageable);
+
+    @Query("""
+    SELECT o
+    FROM OrderEntity o
+    WHERE DATE(o.createdAt) = :date
+""")
+    Page<OrderEntity> findByCreatedAtDate(
+            @Param("date") LocalDate date,
+            Pageable pageable
+    );
 }
