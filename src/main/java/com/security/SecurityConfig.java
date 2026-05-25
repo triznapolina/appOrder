@@ -45,6 +45,12 @@ public class SecurityConfig {
                         .requestMatchers("/chat/**").permitAll()
                         .requestMatchers("/food-category/**").permitAll()
                         .requestMatchers( "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
                         .anyRequest().authenticated())
                 .sessionManagement(
                         manager -> manager.sessionCreationPolicy(STATELESS))
